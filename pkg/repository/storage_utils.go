@@ -1,7 +1,10 @@
 package repository
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 var database_environment = map[string]string{
@@ -45,6 +48,12 @@ func AssertDatabaseConfigEnvExists(env string) (err error) {
 	}
 
 	return nil
+}
+
+func FormatConfigFilePath(env string) (file_path string) {
+	_, callingFile, _, _ := runtime.Caller(0)
+	file_path = filepath.Join(filepath.Dir(callingFile), "configurations", fmt.Sprintf("obs_%v.json", env))
+	return
 }
 
 func AssertConfigFileExists(file_path string) error {
