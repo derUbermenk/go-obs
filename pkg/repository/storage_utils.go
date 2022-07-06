@@ -1,5 +1,9 @@
 package repository
 
+import (
+	"os"
+)
+
 var database_environment = map[string]string{
 	"dev":  "dev",
 	"test": "test",
@@ -38,6 +42,19 @@ func AssertDatabaseConfigEnvExists(env string) (err error) {
 			Env: env,
 		}
 		return err
+	}
+
+	return nil
+}
+
+func AssertConfigFileExists(file_path string) error {
+	file, err := os.Open(file_path)
+	defer file.Close()
+
+	if err != nil {
+		return &ErrNonExistentConfigFile{
+			Filepath: file_path,
+		}
 	}
 
 	return nil

@@ -20,3 +20,22 @@ func (e *ErrNonExistentDatabaseEnvironment) Is(target error) bool {
 
 	return t.Env == e.Env
 }
+
+type ErrNonExistentConfigFile struct {
+	Filepath string
+}
+
+func (e *ErrNonExistentConfigFile) Error() string {
+	msg := fmt.Sprintf("Non existent config file: \n\t%v", e.Filepath)
+	return msg
+}
+
+func (e *ErrNonExistentConfigFile) Is(target error) bool {
+	t, isType := target.(*ErrNonExistentConfigFile)
+
+	if !isType {
+		return false
+	}
+
+	return t.Filepath == e.Filepath
+}
