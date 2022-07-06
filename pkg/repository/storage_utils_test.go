@@ -45,6 +45,45 @@ func TestAssertDatabaseConfigEnvExists(t *testing.T) {
 	}
 }
 
+func TestFormatConfigFilePath(t *testing.T) {
+	tests := []struct {
+		name          string
+		env           string
+		want_filepath string
+	}{
+		{
+			name:          "When given the env it returns the correct file path v1",
+			env:           "test",
+			want_filepath: "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/obs_test.json",
+		},
+		{
+			name:          "When given the env it returns the correct file path v2",
+			env:           "dev",
+			want_filepath: "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/obs_dev.json",
+		},
+		{
+			name:          "When given the env it returns the correct file path v3",
+			env:           "some_env",
+			want_filepath: "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/obs_some_env.json",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			file_path := repository.FormatConfigFilePath(test.env)
+
+			if file_path != test.want_filepath {
+				t.Errorf(
+					"Test failed: %v \n\tgot %v \n\twant: %v",
+					test.name,
+					file_path,
+					test.want_filepath,
+				)
+			}
+		})
+	}
+}
+
 func TestAssertConfigFileExists(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -64,7 +103,7 @@ func TestAssertConfigFileExists(t *testing.T) {
 		{
 			name:     "Returns an error when given an non existing filepath",
 			filepath: "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/obs_nonExisting.json",
-			want_err: &repository.ErrNonExistentConfigFile{Filepath: ""},
+			want_err: &repository.ErrNonExistentConfigFile{Filepath: "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/obs_nonExisting.json"},
 		},
 	}
 
