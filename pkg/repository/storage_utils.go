@@ -21,6 +21,18 @@ type DatabaseConfig struct {
 	DatabaseName string "json:databasename"
 }
 
+func (dc *DatabaseConfig) ConnectionString() string {
+	connString := fmt.Sprintf(
+		"postgres://%s:%s@%s/%s?sslmode=disable",
+		dc.Username,
+		dc.Password,
+		dc.Host,
+		dc.DatabaseName,
+	)
+
+	return connString
+}
+
 func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
 	databaseConfig = &DatabaseConfig{}
 

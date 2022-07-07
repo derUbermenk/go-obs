@@ -6,6 +6,40 @@ import (
 	"testing"
 )
 
+func TestConnectionString(t *testing.T) {
+	tests := []struct {
+		name                  string
+		databaseConfig        *repository.DatabaseConfig
+		want_connectionString string
+	}{
+		{
+			name: "Returns the correct connection string for the following database config",
+			databaseConfig: &repository.DatabaseConfig{
+				Username:     "test_user",
+				Password:     "test_password",
+				Host:         "test_host",
+				DatabaseName: "test_database",
+			},
+			want_connectionString: "postgres://test_user:test_password@test_host/test_database?sslmode=disable",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			connString := test.databaseConfig.ConnectionString()
+
+			if connString != test.want_connectionString {
+				t.Errorf(
+					"\nTest failed: %v\n\tgot: %v\n\twant: %v",
+					test.name,
+					connString,
+					test.want_connectionString,
+				)
+			}
+		})
+	}
+}
+
 func TestAssertDatabaseConfigEnvExists(t *testing.T) {
 	tests := []struct {
 		name     string
