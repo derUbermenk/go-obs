@@ -134,7 +134,7 @@ func TestParseConfigFile(t *testing.T) {
 		{
 			name:           "Parses the database config",
 			databaseConfig: &repository.DatabaseConfig{},
-			file_path:      "",
+			file_path:      "/home/chester/Documents/code_projects/go-projects/go-online-bidding-system/pkg/repository/configurations/sample_db.json",
 			want_databaseConfig: &repository.DatabaseConfig{
 				Username:     "test_user",
 				Password:     "test_password",
@@ -166,7 +166,6 @@ func TestParseConfigFile(t *testing.T) {
 					test.want_databaseConfig,
 				)
 			}
-
 		})
 	}
 }
