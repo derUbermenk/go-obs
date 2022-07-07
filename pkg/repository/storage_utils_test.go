@@ -122,3 +122,51 @@ func TestAssertConfigFileExists(t *testing.T) {
 		})
 	}
 }
+
+func TestParseConfigFile(t *testing.T) {
+	tests := []struct {
+		name                string
+		databaseConfig      *repository.DatabaseConfig
+		file_path           string
+		want_databaseConfig *repository.DatabaseConfig
+		want_err            error
+	}{
+		{
+			name:           "Parses the database config",
+			databaseConfig: &repository.DatabaseConfig{},
+			file_path:      "",
+			want_databaseConfig: &repository.DatabaseConfig{
+				Username:     "test_user",
+				Password:     "test_password",
+				Host:         "test_local",
+				DatabaseName: "test_db",
+			},
+			want_err: nil,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			err := repository.ParseConfigFile(test.databaseConfig, test.file_path)
+
+			if !errors.Is(err, test.want_err) {
+				t.Errorf(
+					"Test failed: %v \n\tgot: %v\n\twant: %v",
+					test.name,
+					err,
+					test.want_err,
+				)
+			}
+
+			if test.databaseConfig != test.want_databaseConfig {
+				t.Errorf(
+					"Test failed: %v \n\tgot: %v\n\twant: %v",
+					test.name,
+					test.databaseConfig,
+					test.want_databaseConfig,
+				)
+			}
+
+		})
+	}
+}
