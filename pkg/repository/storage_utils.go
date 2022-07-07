@@ -18,7 +18,7 @@ type DatabaseConfig struct {
 	Username     string "json:username"
 	Password     string "json:password"
 	Host         string "json:host"
-	DatabaseName string "json:database_name"
+	DatabaseName string "json:databasename"
 }
 
 func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {

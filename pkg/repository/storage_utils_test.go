@@ -158,7 +158,7 @@ func TestParseConfigFile(t *testing.T) {
 				)
 			}
 
-			if test.databaseConfig != test.want_databaseConfig {
+			if *test.databaseConfig != *test.want_databaseConfig {
 				t.Errorf(
 					"Test failed: %v \n\tgot: %v\n\twant: %v",
 					test.name,
