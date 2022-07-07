@@ -45,7 +45,7 @@ func TestAssertDatabaseConfigEnvExists(t *testing.T) {
 	}
 }
 
-func TestFormatConfigFilePath(t *testing.T) {
+func TestGetConfigFilePath(t *testing.T) {
 	tests := []struct {
 		name          string
 		env           string
@@ -70,7 +70,7 @@ func TestFormatConfigFilePath(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			file_path := repository.FormatConfigFilePath(test.env)
+			file_path := repository.GetConfigFilePath(test.env)
 
 			if file_path != test.want_filepath {
 				t.Errorf(
