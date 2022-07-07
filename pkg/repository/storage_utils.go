@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -22,20 +24,29 @@ type DatabaseConfig struct {
 func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
 
 	// assert that the environment exists
-	// err = AssertDatabaseConfigEnvExists(env)
+	err = AssertDatabaseConfigEnvExists(env)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// get file path for the environment
-	// file_path := GetConfigFilePath(env)
+	file_path := GetConfigFilePath(env)
 
 	// assert that the file for the environment exist
-	// err := AssertConfigFileExists(file_path string)
+	err = AssertConfigFileExists(file_path)
+	if err != nil {
+		return nil, err
+	}
 
 	// unmarshall the contents of the file into database config
+	err = ParseConfigFile(databaseConfig, file_path)
 
-	// format the connstring for the database config
+	if err != nil {
+		return nil, err
+	}
 
 	// return database config
-
 	return databaseConfig, nil
 }
 
@@ -68,5 +79,28 @@ func AssertConfigFileExists(file_path string) error {
 		}
 	}
 
+	return nil
+}
+
+func ParseConfigFile(databaseConfig *DatabaseConfig, file_path string) error {
+	file, err := os.Open(file_path)
+	defer file.Close()
+
+	if err != nil {
+		err = &ErrParsingFile{
+			Err: err,
+		}
+
+		return err
+	}
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		err = &ErrParsingFile{
+			Err: err,
+		}
+	}
+
+	json.Unmarshal(data, databaseConfig)
 	return nil
 }

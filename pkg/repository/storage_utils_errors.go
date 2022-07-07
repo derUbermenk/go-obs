@@ -39,3 +39,18 @@ func (e *ErrNonExistentConfigFile) Is(target error) bool {
 
 	return t.Filepath == e.Filepath
 }
+
+type ErrParsingFile struct {
+	Err error
+}
+
+func (e *ErrParsingFile) Error() string {
+	msg := fmt.Sprintf("Error parsing file: %v", e.Err)
+	return msg
+}
+
+func (e *ErrParsingFile) Is(target error) bool {
+	t, isType := target.(*ErrParsingFile)
+
+	return isType && t.Err == e.Err
+}
