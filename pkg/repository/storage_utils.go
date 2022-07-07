@@ -22,6 +22,7 @@ type DatabaseConfig struct {
 }
 
 func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
+	databaseConfig = &DatabaseConfig{}
 
 	// assert that the environment exists
 	err = AssertDatabaseConfigEnvExists(env)

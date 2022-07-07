@@ -169,3 +169,132 @@ func TestParseConfigFile(t *testing.T) {
 		})
 	}
 }
+
+func TestNewDataBaseConfig(t *testing.T) {
+	no_err_tests := []struct {
+		name     string
+		env      string
+		want_err error
+	}{
+		{
+			name:     "Returns a nil error when given a valid environment. dev",
+			env:      "dev",
+			want_err: nil,
+		},
+		{
+			name:     "Returns a nil error when given a valid environment. test",
+			env:      "test",
+			want_err: nil,
+		},
+	}
+
+	for _, test := range no_err_tests {
+		t.Run(test.name, func(t *testing.T) {
+			_, err := repository.NewDatabaseConfig(test.env)
+
+			if !errors.Is(test.want_err, err) {
+				t.Errorf(
+					"\nTest failed: %v \n\tgot: %v\n\twant: %v",
+					test.name,
+					err,
+					test.want_err,
+				)
+			}
+		})
+	}
+
+	filled_fields_tests := []struct {
+		name string
+		env  string
+	}{
+		{
+			name: "Returns a valid DataConfig with all fields filled with env dev",
+			env:  "dev",
+		},
+		{
+			name: "Returns a valid DataConfig with all fields filled with env test",
+			env:  "test",
+		},
+	}
+
+	for _, test := range filled_fields_tests {
+		t.Run(test.name, func(t *testing.T) {
+			databaseConfig, _ := repository.NewDatabaseConfig(test.env)
+
+			if databaseConfig.Username == "" {
+				t.Errorf(
+					"\nTest failed: %v\n\t databaseConfig Username empty",
+					test.name,
+				)
+			}
+
+			if databaseConfig.Password == "" {
+				t.Errorf(
+					"\nTest failed: %v\n\t databaseConfig Password empty",
+					test.name,
+				)
+			}
+
+			if databaseConfig.Host == "" {
+				t.Errorf(
+					"\nTest failed: %v\n\t databaseConfig Host empty",
+					test.name,
+				)
+			}
+
+			if databaseConfig.DatabaseName == "" {
+				t.Errorf(
+					"\nTest failed: %v\n\t databaseConfig DatabaseName empty",
+					test.name,
+				)
+			}
+		})
+	}
+
+	/*
+		{
+			name: "Returns a valid DataConfig with the valid database for the environment v1",
+			env: "dev",
+			want_databaseConfigDatabaseName: "obs",
+		},
+		{
+			name: "Returns a valid DataConfig with the valid database for the environment v2",
+			env: "test",
+			want_databaseConfigDatabaseName: "obs_test",
+		},
+	*/
+
+	valid_database_name_tests := []struct {
+		name              string
+		env               string
+		want_databasename string
+	}{
+		{
+			name:              "Returns the correct database name for the environment. dev",
+			env:               "dev",
+			want_databasename: "obs",
+		},
+		{
+			name:              "Returns the correct database name for the environment. test",
+			env:               "test",
+			want_databasename: "obs_test",
+		},
+	}
+
+	for _, test := range valid_database_name_tests {
+		t.Run(test.name, func(t *testing.T) {
+			databaseConfig, _ := repository.NewDatabaseConfig(test.env)
+			databasename := databaseConfig.DatabaseName
+
+			if test.want_databasename != databasename {
+				t.Errorf(
+					"Test failed: %v \n\tgot: %v\n\twant: %v",
+					test.name,
+					databasename,
+					test.want_databasename,
+				)
+			}
+		})
+	}
+
+}
