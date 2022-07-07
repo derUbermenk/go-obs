@@ -204,6 +204,62 @@ func TestParseConfigFile(t *testing.T) {
 	}
 }
 
+func AssertCompleteConfig(t *testing.t) {
+	tests := []struct {
+		name           string
+		databaseConfig *repository.DatabaseConfig
+		want_err       error
+	}{
+		{
+			name:           "Returns an error when given an incomplete database config. v1",
+			databaseConfig: &repository.DatabaseConfig{},
+			want_err: &repository.ErrIncompleteDatabaseConfig{
+				MissingUsername:     true,
+				MissingPassword:     true,
+				MissingHost:         true,
+				MissingDatabaseName: true,
+			},
+		},
+		{
+			name: "Returns an error when given an incomplete database config. v2",
+			databaseConfig: &repository.DatabaseConfig{
+				Password:     "pw",
+				Host:         "s",
+				DatabaseName: "s",
+			},
+			want_err: &repository.ErrIncompleteDatabaseConfig{
+				MissingUsername: true,
+			},
+		},
+		{
+			name: "Returns an error when given an incomplete database config. v2",
+			databaseConfig: &repository.DatabaseConfig{
+				Username:     "s",
+				Host:         "s",
+				DatabaseName: "s",
+			},
+			want_err: &repository.ErrIncompleteDatabaseConfig{
+				MissingPassword: true,
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t testing.T) {
+			err := repository.AssertCompleteConfig(test.databaseConfig)
+
+			if !errors.Is(test.want_err, err) {
+				t.Errorf(
+					"\nTest failed: %v\n\tgot: %v\n\twant: %v",
+					test.name,
+					err,
+					test.want_err,
+				)
+			}
+		})
+	}
+}
+
 func TestNewDataBaseConfig(t *testing.T) {
 	no_err_tests := []struct {
 		name     string
@@ -330,5 +386,4 @@ func TestNewDataBaseConfig(t *testing.T) {
 			}
 		})
 	}
-
 }
