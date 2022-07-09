@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"online-bidding-system/pkg/app"
 	"online-bidding-system/pkg/repository"
@@ -20,8 +19,14 @@ func main() {
 
 func run() error {
 	// get database connection string
+	dev_env := "dev"
+	dbconfig, err := repository.NewDatabaseConfig(dev_env)
 
-	var connection_string string
+	if err != nil {
+		return err
+	}
+
+	connection_string := dbconfig.ConnectionString()
 
 	// database setup
 	db, err := connectDatabase(connection_string)
@@ -52,35 +57,4 @@ func run() error {
 	}
 
 	return nil
-}
-
-func loadDatabaseConfig(config *DatabaseConfig) {
-	file, err := os.Open("../../pkg/repository/configs/development_db")
-}
-
-func setupStorage(connection_string string, db *sql.DB) (storage repository.Storage, err error) {
-	storage = repository.NewStorage(db)
-	err = storage.RunMigrations(connection_string)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return storage, nil
-}
-
-func connectDatabase(connString string) (*sql.DB, error) {
-	db, err := sql.Open("postgres", connString)
-
-	if err != nil {
-		return nil, err
-	}
-
-	err = db.Ping()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
 }
