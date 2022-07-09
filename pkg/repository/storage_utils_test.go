@@ -204,7 +204,7 @@ func TestParseConfigFile(t *testing.T) {
 	}
 }
 
-func AssertCompleteConfig(t *testing.t) {
+func AssertCompleteConfig(t *testing.T) {
 	tests := []struct {
 		name           string
 		databaseConfig *repository.DatabaseConfig
@@ -245,7 +245,7 @@ func AssertCompleteConfig(t *testing.t) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func(t testing.T) {
+		t.Run(test.name, func(t *testing.T) {
 			err := repository.AssertCompleteConfig(test.databaseConfig)
 
 			if !errors.Is(test.want_err, err) {

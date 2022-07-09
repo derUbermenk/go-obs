@@ -59,6 +59,13 @@ func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
 		return nil, err
 	}
 
+	// assert that all database config fields are filled
+	err = AssertCompleteConfig(databaseConfig)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// return database config
 	return databaseConfig, nil
 }
@@ -115,5 +122,37 @@ func ParseConfigFile(databaseConfig *DatabaseConfig, file_path string) error {
 	}
 
 	json.Unmarshal(data, databaseConfig)
+	return nil
+}
+
+func AssertCompleteConfig(databaseConfig *DatabaseConfig) error {
+	err := &ErrIncompleteDatabaseConfig{}
+
+	// check first if there are no negative values for all the databasecOnfig fields
+	noUsername := databaseConfig.Username == ""
+	noPassword := databaseConfig.Password == ""
+	noHost := databaseConfig.Host == ""
+	noDatabaseName := databaseConfig.DatabaseName == ""
+
+	if noUsername || noPassword || noHost || noDatabaseName {
+		if noUsername {
+			err.MissingUsername = noUsername
+		}
+
+		if noPassword {
+			err.MissingPassword = noPassword
+		}
+
+		if noHost {
+			err.MissingHost = noHost
+		}
+
+		if noDatabaseName {
+			err.MissingDatabaseName = noDatabaseName
+		}
+
+		return err
+	}
+
 	return nil
 }
