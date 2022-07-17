@@ -7,6 +7,9 @@ import (
 	"runtime"
 
 	"github.com/golang-migrate/migrate"
+	_ "github.com/golang-migrate/migrate/database/postgres"
+	_ "github.com/golang-migrate/migrate/source/file"
+	_ "github.com/lib/pq"
 )
 
 type Storage interface {
