@@ -19,8 +19,19 @@ func main() {
 	}
 }
 
+// Runs the app. The follwing steps are taken.
+//   1. initialize a DatabaseConfig
+//   2. format the connection
+//   3. Connect to the database using the connection string
+//   4. Initialize a Storage interface type for use of apis
+//   5. initialize a router for use of the server
+//   6. Setup the server with the dependencies, router and apis as arguments
 func run() error {
-	// get database connection string
+
+	// initialize DatabaseConfig
+	// DatabaseConfig reads json config files
+	// that contain information needed for connecting to database
+	// See DatabaseConfig for more info.
 	dev_env := "dev"
 	dbconfig, err := repository.NewDatabaseConfig(dev_env)
 
@@ -28,9 +39,11 @@ func run() error {
 		return err
 	}
 
+	// The connectionstring is required input when working with
+	// database level code.
 	connection_string := dbconfig.ConnectionString()
 
-	// database setup
+	// Connect to the database specified by the connection string
 	db, err := serverutils.ConnectDatabase(connection_string)
 
 	if err != nil {
@@ -38,6 +51,10 @@ func run() error {
 		return err
 	}
 
+	// initializes a Storage type variable for use as dependencies of apis
+	// and subsequently run migrations on the storage's database.
+	//
+	// * replace _ to storage when ready
 	_, err = serverutils.SetupStorage(connection_string, db)
 
 	if err != nil {
@@ -45,12 +62,17 @@ func run() error {
 		return err
 	}
 
-	// api setup
+	// setup the api to be used by the server
+	//
+	// typical api setup code.
+	// api_1 := api.NewApi1(storage)
 
 	// server setup
+	// we add our routes to the router
 	router := gin.Default()
 	router.Use(cors.Default())
 
+	// the router is a dependency of the server
 	server := app.NewServer(router)
 
 	// run the server
