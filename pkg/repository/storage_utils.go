@@ -33,6 +33,15 @@ func (dc *DatabaseConfig) ConnectionString() string {
 	return connString
 }
 
+// initializes a DatabaseConfig struct from a json file
+// assertions of field completeness are made before final initializitations
+// and will return an error if an error was met instead.
+//
+// The following assertions are made before initializing
+// the config file
+//   1. wanted environment exists
+//   2. config file for the environment exists
+// 	 3. all the needed fields for the config exists
 func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
 	databaseConfig = &DatabaseConfig{}
 
@@ -70,6 +79,8 @@ func NewDatabaseConfig(env string) (databaseConfig *DatabaseConfig, err error) {
 	return databaseConfig, nil
 }
 
+// checks if the given environment is present in the choice
+// of database environments
 func AssertDatabaseConfigEnvExists(env string) (err error) {
 	_, env_exists := database_environment[env]
 
@@ -83,12 +94,23 @@ func AssertDatabaseConfigEnvExists(env string) (err error) {
 	return nil
 }
 
+// Gets the config file path given the environment of choice
+// calling file returns the filename that is calling this particular function.
+// GetConfigFilePath via runtime.Caller(0)
+// filepath.Dir(callingFile) returns the directory of the calling file
+//
+// with filepath.Join(directory_of_calling_file, configuration_folder_name, file_name)
+// we get
+// file_path = "directory_of_calling_file/configurations/obs_environment.json"
+// wherein the directory of calling file starts at /home assuming a unix ecosystem
 func GetConfigFilePath(env string) (file_path string) {
 	_, callingFile, _, _ := runtime.Caller(0)
 	file_path = filepath.Join(filepath.Dir(callingFile), "configurations", fmt.Sprintf("obs_%v.json", env))
 	return
 }
 
+// Checks if the config file exists given the file path
+// this assertion is called for better errors
 func AssertConfigFileExists(file_path string) error {
 	file, err := os.Open(file_path)
 	defer file.Close()
@@ -98,10 +120,10 @@ func AssertConfigFileExists(file_path string) error {
 			Filepath: file_path,
 		}
 	}
-
 	return nil
 }
 
+// Parses the config file fields to a DatabaseConfig object
 func ParseConfigFile(databaseConfig *DatabaseConfig, file_path string) error {
 	file, err := os.Open(file_path)
 	defer file.Close()
@@ -125,6 +147,9 @@ func ParseConfigFile(databaseConfig *DatabaseConfig, file_path string) error {
 	return nil
 }
 
+// Asserts that the returned DatabaseConfig has its fields all filled.
+// Assertion is important so that problems are met at DatabaseConfig
+// initialization.
 func AssertCompleteConfig(databaseConfig *DatabaseConfig) error {
 	err := &ErrIncompleteDatabaseConfig{}
 

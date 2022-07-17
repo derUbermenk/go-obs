@@ -31,6 +31,7 @@ func (s *storage) RunMigrations(connectionString string) error {
 	if connectionString == "" {
 		return errors.New("repository: the connString was empty")
 	}
+
 	// get base path
 	_, b, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(b), "../..")
