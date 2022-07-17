@@ -1,11 +1,13 @@
-package main
+package serverutils
 
 import (
 	"database/sql"
 	"online-bidding-system/pkg/repository"
+
+	_ "github.com/lib/pq"
 )
 
-func setupStorage(connection_string string, db *sql.DB) (storage repository.Storage, err error) {
+func SetupStorage(connection_string string, db *sql.DB) (storage repository.Storage, err error) {
 	storage = repository.NewStorage(db)
 	err = storage.RunMigrations(connection_string)
 
@@ -16,7 +18,7 @@ func setupStorage(connection_string string, db *sql.DB) (storage repository.Stor
 	return storage, nil
 }
 
-func connectDatabase(connString string) (*sql.DB, error) {
+func ConnectDatabase(connString string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", connString)
 
 	if err != nil {

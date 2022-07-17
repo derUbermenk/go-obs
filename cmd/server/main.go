@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"online-bidding-system/cmd/serverutils"
 	"online-bidding-system/pkg/app"
 	"online-bidding-system/pkg/repository"
 	"os"
@@ -29,15 +31,17 @@ func run() error {
 	connection_string := dbconfig.ConnectionString()
 
 	// database setup
-	db, err := connectDatabase(connection_string)
+	db, err := serverutils.ConnectDatabase(connection_string)
 
 	if err != nil {
+		log.Printf("Err on Main SetupStorage: %v\n", err)
 		return err
 	}
 
-	_, err = setupStorage(connection_string, db)
+	_, err = serverutils.SetupStorage(connection_string, db)
 
 	if err != nil {
+		log.Printf("Err on Main SetupStorage: %v\n", err)
 		return err
 	}
 
