@@ -18,6 +18,6 @@ func (u *user_service) Delete(uid int) (err error) {
 	return
 }
 
-func (u *user_service) Update(User) (user User, err error) {
+func (u *user_service) Update(user User) (err error) {
 	return
 }
