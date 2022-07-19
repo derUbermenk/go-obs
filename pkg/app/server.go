@@ -7,7 +7,10 @@ import (
 )
 
 type Server struct {
-	router *gin.Engine
+	router          *gin.Engine
+	user_service    api.UserService
+	bidding_service api.BiddingService
+	auth_service    api.AuthService
 }
 
 func NewServer(router *gin.Engine) *Server {
