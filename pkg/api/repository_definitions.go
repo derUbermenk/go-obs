@@ -13,3 +13,7 @@ type BidRepository interface {
 	DeleteBidding(bID int) (err error)
 	UpdateBidding(bid Bidding) (err error)
 }
+
+type AuthRepository interface {
+	GetUserByEmail(email string) (user User, err error)
+}
