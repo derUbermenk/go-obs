@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"online-bidding-system/cmd/serverutils"
+	"online-bidding-system/pkg/api"
 	"online-bidding-system/pkg/app"
 	"online-bidding-system/pkg/repository"
 	"os"
@@ -55,7 +56,7 @@ func run() error {
 	// and subsequently run migrations on the storage's database.
 	//
 	// * replace _ to storage when ready
-	storage, err = serverutils.SetupStorage(connection_string, db)
+	storage, err := serverutils.SetupStorage(connection_string, db)
 
 	if err != nil {
 		log.Printf("Err on Main SetupStorage: %v\n", err)
