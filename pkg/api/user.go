@@ -1,10 +1,8 @@
 package api
 
-import "online-bidding-system/pkg/repository"
-
-func NewUserService(storage repository.Storage) UserService {
+func NewUserService(userRepo UserRepository) UserService {
 	return &user_service{
-		user_repo: storage,
+		userRepo: userRepo,
 	}
 }
 
