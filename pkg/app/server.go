@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	"online-bidding-system/pkg/api"
 
 	"github.com/gin-gonic/gin"
 )
