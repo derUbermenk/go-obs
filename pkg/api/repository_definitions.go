@@ -11,5 +11,5 @@ type BidRepository interface {
 	AllBiddings() (biddings []Bidding, err error)
 	GetBidding(bID int) (bid Bidding, err error)
 	DeleteBidding(bID int) (err error)
-	UpdateBidding(bid Bid) (err error)
+	UpdateBidding(bid Bidding) (err error)
 }
