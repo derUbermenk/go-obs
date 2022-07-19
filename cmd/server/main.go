@@ -55,7 +55,7 @@ func run() error {
 	// and subsequently run migrations on the storage's database.
 	//
 	// * replace _ to storage when ready
-	_, err = serverutils.SetupStorage(connection_string, db)
+	storage, err = serverutils.SetupStorage(connection_string, db)
 
 	if err != nil {
 		log.Printf("Err on Main SetupStorage: %v\n", err)
@@ -66,6 +66,9 @@ func run() error {
 	//
 	// typical api setup code.
 	// api_1 := api.NewApi1(storage)
+	user_service := api.NewUserService(storage)
+	bidding_service := api.NewBiddingService(storage)
+	auth_service := api.NewAuthService(storage)
 
 	// server setup
 	// we add our routes to the router
@@ -73,7 +76,7 @@ func run() error {
 	router.Use(cors.Default())
 
 	// the router is a dependency of the server
-	server := app.NewServer(router)
+	server := app.NewServer(router, user_service, bidding_service, auth_service)
 
 	// run the server
 	err = server.Run()
