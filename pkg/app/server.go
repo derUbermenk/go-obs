@@ -2,17 +2,27 @@ package app
 
 import (
 	"log"
+	"online-bidding-system/pkg/api"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	router *gin.Engine
+	router          *gin.Engine
+	user_service    api.UserService
+	bidding_service api.BiddingService
+	auth_service    api.AuthService
 }
 
-func NewServer(router *gin.Engine) *Server {
+func NewServer(
+	router *gin.Engine, user_service api.UserService,
+	bidding_service api.BiddingService, auth_service api.AuthService,
+) *Server {
 	return &Server{
-		router: router,
+		router:          router,
+		user_service:    user_service,
+		bidding_service: bidding_service,
+		auth_service:    auth_service,
 	}
 }
 
