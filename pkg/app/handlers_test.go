@@ -1,6 +1,9 @@
 package app_test
 
 import (
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"online-bidding-system/pkg/api"
 	"online-bidding-system/pkg/app"
 	"os"
@@ -8,6 +11,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/assert/v2"
 )
 
 var server *app.Server
@@ -31,4 +35,19 @@ func TestMain(m *testing.M) {
 }
 
 func TestApiStatus(t *testing.T) {
+	// define the route
+	router.GET(`/v1/api/status`, server.ApiStatus())
+	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+
+	var response *app.GenericResponse
+	expected_response := &app.GenericResponse{
+		Status:  true,
+		Message: "Bidding System API running smoothly",
+	}
+
+	json.Unmarshal(w.Body.Bytes(), &response)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, expected_response, response)
 }
