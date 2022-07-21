@@ -28,7 +28,6 @@ func TestMain(m *testing.M) {
 	router.Use(cors.Default())
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 	// initialize a server with the router
-	// run the server's Routes methods to initialize endpoints
 
 	exitValue := m.Run()
 	os.Exit(exitValue)
