@@ -26,6 +26,19 @@ type mockUserService struct {
 	userRepo map[int]User
 }
 
+var userRepo = map[int]User{
+	0: User{
+		Name:           "User One",
+		Email:          "user1@email.com",
+		HashedPassword: "x120asd",
+	},
+	1: User{
+		Name:           "User Two",
+		Email:          "user2@email.com",
+		HashedPassword: "y562ash",
+	},
+}
+
 func (mU *mockUserService) All() ([]User, error) {
 	// return an array of all the users
 	return []User{}, nil
@@ -69,18 +82,6 @@ func TestAllUsers(t *testing.T) {
 	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
-
-	user1 := User{
-		Name:           "User One",
-		Email:          "user1@email.com",
-		HashedPassword: "x120asd",
-	}
-
-	user2 := User{
-		Name:           "User Two",
-		Email:          "user2@email.com",
-		HashedPassword: "y562ash",
-	}
 
 	var response *app.GenericResponse
 	expected_response := &app.GenericResponse{
