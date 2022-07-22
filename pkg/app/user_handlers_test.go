@@ -14,10 +14,33 @@ import (
 	"github.com/go-playground/assert/v2"
 )
 
+// this must be the same as that defined in api definition of the user.
+// this is made so that no api code is called in this test
 type User struct {
 	Name           string `json:"name"`
 	Email          string `json:"email"`
 	HashedPassword string `json:"hashedPass"`
+}
+
+type mockUserService struct {
+	userRepo map[int]User
+}
+
+func (mU *mockUserService) All() ([]User, error) {
+	// return an array of all the users
+	return []User{}, nil
+}
+
+func (mU *mockUserService) Get(userID int) (User, error) {
+	return User{}, nil
+}
+
+func (mU *mockUserService) Delete(userID int) error {
+	return nil
+}
+
+func (mU *mockUserService) Update(user User) error {
+	return nil
 }
 
 var server *app.Server
