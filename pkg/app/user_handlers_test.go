@@ -23,10 +23,10 @@ type User struct {
 }
 
 type mockUserService struct {
-	userRepo map[int]User
+	userRepo map[int]api.User
 }
 
-var userRepo = map[int]User{
+var userRepo = map[int]api.User{
 	0: User{
 		Name:           "User One",
 		Email:          "user1@email.com",
@@ -39,20 +39,20 @@ var userRepo = map[int]User{
 	},
 }
 
-func (mU *mockUserService) All() ([]User, error) {
+func (mU *mockUserService) All() ([]api.User, error) {
 	// return an array of all the users
-	return []User{}, nil
+	return []api.User{mU.userRepo[0], mU.userRepo[1]}, nil
 }
 
-func (mU *mockUserService) Get(userID int) (User, error) {
-	return User{}, nil
+func (mU *mockUserService) Get(userID int) (api.User, error) {
+	return mU.userRepo[userID], nil
 }
 
 func (mU *mockUserService) Delete(userID int) error {
 	return nil
 }
 
-func (mU *mockUserService) Update(user User) error {
+func (mU *mockUserService) Update(user api.User) error {
 	return nil
 }
 
@@ -60,17 +60,9 @@ var server *app.Server
 var router *gin.Engine
 
 func TestMain(m *testing.M) {
-	// initialize api variables
-	var user_service api.UserService
-	var bidding_service api.BiddingService
-	var auth_service api.AuthService
-
 	// initialize router
 	router = gin.Default()
 	router.Use(cors.Default())
-	server = app.NewServer(router, user_service, bidding_service, auth_service)
-
-	// initialize a server with the router
 
 	// run the tests
 	exitValue := m.Run()
@@ -78,6 +70,15 @@ func TestMain(m *testing.M) {
 }
 
 func TestAllUsers(t *testing.T) {
+	// initialize api variables
+	var user_service *mockUserService
+	var bidding_service api.BiddingService
+	var auth_service api.AuthService
+	user_service = &mockUserService{userRepo: userRepo}
+
+	// initialize the server using the initialized services
+	server = app.NewServer(router, user_service, bidding_service, auth_service)
+
 	router.GET(`/v1/api/status`, server.AllUsers())
 	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)
 	w := httptest.NewRecorder()
@@ -87,7 +88,7 @@ func TestAllUsers(t *testing.T) {
 	expected_response := &app.GenericResponse{
 		Status:  true,
 		Message: `Users successfully retrieved`,
-		Data:    []User{user1, user2},
+		Data:    []api.User{userRepo[0], userRepo[1]},
 	}
 
 	json.Unmarshal(w.Body.Bytes(), &response)
