@@ -16,23 +16,17 @@ import (
 
 // this must be the same as that defined in api definition of the user.
 // this is made so that no api code is called in this test
-type User struct {
-	Name           string `json:"name"`
-	Email          string `json:"email"`
-	HashedPassword string `json:"hashedPass"`
-}
-
 type mockUserService struct {
 	userRepo map[int]api.User
 }
 
 var userRepo = map[int]api.User{
-	0: User{
+	0: api.User{
 		Name:           "User One",
 		Email:          "user1@email.com",
 		HashedPassword: "x120asd",
 	},
-	1: User{
+	1: api.User{
 		Name:           "User Two",
 		Email:          "user2@email.com",
 		HashedPassword: "y562ash",
@@ -85,13 +79,23 @@ func TestAllUsers(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	var response *app.GenericResponse
-	expected_response := &app.GenericResponse{
+	var expected_response *app.GenericResponse
+
+	// marshall and unmarshall the expected response to be able to check
+	// for equality of the data returned.
+	expected_byte_response, err := json.Marshal(&app.GenericResponse{
 		Status:  true,
 		Message: `Users successfully retrieved`,
 		Data:    []api.User{userRepo[0], userRepo[1]},
-	}
+	})
 
+	assert.Equal(t, err, nil)
+
+	json.Unmarshal(expected_byte_response, &expected_response)
 	json.Unmarshal(w.Body.Bytes(), &response)
+
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, expected_response, response)
+	assert.Equal(t, expected_response.Status, response.Status)
+	assert.Equal(t, expected_response.Message, response.Message)
+	assert.Equal(t, expected_response.Data, response.Data)
 }
