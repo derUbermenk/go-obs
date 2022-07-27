@@ -43,6 +43,7 @@ func (mU *mockUserService) Get(userID int) (api.User, error) {
 }
 
 func (mU *mockUserService) Delete(userID int) error {
+	// simulate a successful delete operation
 	return nil
 }
 
