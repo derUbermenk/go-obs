@@ -17,16 +17,16 @@ import (
 var server *app.Server
 var router *gin.Engine
 
+// initialize api variables
+var user_service api.UserService
+var bidding_service api.BiddingService
+var auth_service api.AuthService
+
 func TestMain(m *testing.M) {
-	// initialize api variables
-	var user_service api.UserService
-	var bidding_service api.BiddingService
-	var auth_service api.AuthService
 
 	// initialize a router
 	router = gin.Default()
 	router.Use(cors.Default())
-	server = app.NewServer(router, user_service, bidding_service, auth_service)
 	// initialize a server with the router
 
 	exitValue := m.Run()
@@ -34,6 +34,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestApiStatus(t *testing.T) {
+	server = app.NewServer(router, user_service, bidding_service, auth_service)
+
 	// define the route
 	router.GET(`/v1/api/status`, server.ApiStatus())
 	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)

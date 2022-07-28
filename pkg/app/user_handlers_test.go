@@ -6,11 +6,8 @@ import (
 	"net/http/httptest"
 	"online-bidding-system/pkg/api"
 	"online-bidding-system/pkg/app"
-	"os"
 	"testing"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"
 )
 
@@ -51,31 +48,15 @@ func (mU *mockUserService) Update(user api.User) error {
 	return nil
 }
 
-var server *app.Server
-var router *gin.Engine
-
-func TestMain(m *testing.M) {
-	// initialize router
-	router = gin.Default()
-	router.Use(cors.Default())
-
-	// run the tests
-	exitValue := m.Run()
-	os.Exit(exitValue)
-}
-
 func TestAllUsers(t *testing.T) {
 	// initialize api variables
-	var user_service *mockUserService
-	var bidding_service api.BiddingService
-	var auth_service api.AuthService
 	user_service = &mockUserService{userRepo: userRepo}
 
 	// initialize the server using the initialized services
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 
-	router.GET(`/v1/api/status`, server.AllUsers())
-	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)
+	router.GET(`/v1/api/users`, server.AllUsers())
+	req, _ := http.NewRequest(`GET`, `/v1/api/users`, nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
@@ -102,9 +83,6 @@ func TestAllUsers(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	var user_service *mockUserService
-	var bidding_service api.BiddingService
-	var auth_service api.AuthService
 	user_service = &mockUserService{userRepo: userRepo}
 
 	// initialize the server using the initialized services
