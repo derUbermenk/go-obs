@@ -111,13 +111,13 @@ func TestDeleteUser(t *testing.T) {
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 
 	// prepare the request
-	router.GET(`/v1/api/user/1/delete`, server.DeleteUser())
-	req, _ := http.NewRequest(`DELETE`, `/v1/api/user/1/delete`, nil)
+	router.DELETE("/user/:id/delete", server.DeleteUser())
+	req, _ := http.NewRequest("DELETE", "/user/1/delete", nil)
 	w := httptest.NewRecorder()
 	router.ServeHTTP(w, req)
 
-	var response *app.GenericResponse
-	var expected_response *app.GenericResponse
+	response := &app.GenericResponse{}
+	expected_response := &app.GenericResponse{}
 
 	expected_byte_response, err := json.Marshal(
 		&app.GenericResponse{
