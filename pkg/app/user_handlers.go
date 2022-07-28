@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,6 +22,8 @@ func (s *Server) AllUsers() gin.HandlerFunc {
 					Message: "Error retrieving users",
 				},
 			)
+
+			return
 		}
 
 		c.JSON(
@@ -36,7 +39,37 @@ func (s *Server) AllUsers() gin.HandlerFunc {
 
 func (s *Server) DeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		delete_userID, err := strconv.Atoi(c.Param(`id`))
+		// get id param
+		id := c.Param(`id`)
+
+		if id == "" {
+			err := errors.New("no id param")
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: err.Error(),
+				},
+			)
+
+			return
+		}
+
+		// parse id param
+		parsed_id, err := strconv.Atoi(id)
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: err.Error(),
+				},
+			)
+			return
+		}
 
 		if err != nil {
 			log.Printf("Handler Error: %v", err)
@@ -47,9 +80,11 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 					Message: "Error handling Request",
 				},
 			)
+
+			return
 		}
 
-		err = s.user_service.Delete(delete_userID)
+		err = s.user_service.Delete(parsed_id)
 
 		if err != nil {
 			log.Printf("Service Error: %v", err)
@@ -60,6 +95,8 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 					Message: "Error deleting user",
 				},
 			)
+
+			return
 		}
 
 		c.JSON(
