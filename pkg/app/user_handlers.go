@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"online-bidding-system/pkg/api"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -104,6 +105,63 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 			&GenericResponse{
 				Status:  true,
 				Message: "User successfully deleted",
+			},
+		)
+	}
+}
+
+func (s *Server) UpdateUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var id int
+		var user api.User
+		var err error
+		id, err = strconv.Atoi(c.Param(`id`))
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update user",
+				},
+			)
+			return
+		}
+
+		err = c.ShouldBindJSON(&user)
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update user",
+				},
+			)
+			return
+		}
+
+		err = s.user_service.Update(id, user)
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update user",
+				},
+			)
+			return
+		}
+
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: "User successfully updated",
 			},
 		)
 	}
