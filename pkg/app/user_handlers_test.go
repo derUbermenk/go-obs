@@ -32,11 +32,11 @@ func TearDownUserHandlersTests() {
 }
 
 func TestAllUsers(t *testing.T) {
-	SetUpTests()
+	SetUpRouter()
 	SetUpUserHandlersTest()
 
 	defer TearDownUserHandlersTests()
-	defer TearDownTests()
+	defer TearDownRouter()
 
 	router.GET(`/v1/api/users`, server.AllUsers())
 	req, _ := http.NewRequest(`GET`, `/v1/api/users`, nil)
@@ -66,11 +66,11 @@ func TestAllUsers(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	SetUpTests()
+	SetUpRouter()
 	SetUpUserHandlersTest()
 
 	defer TearDownUserHandlersTests()
-	defer TearDownTests()
+	defer TearDownRouter()
 
 	// prepare the request
 	router.DELETE("/user/:id/delete", server.DeleteUser())
