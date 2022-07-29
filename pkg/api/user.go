@@ -10,14 +10,14 @@ func (u *user_service) All() (users []User, err error) {
 	return
 }
 
-func (u *user_service) Get(uid int) (user User, err error) {
+func (u *user_service) Get(id int) (user User, err error) {
 	return
 }
 
-func (u *user_service) Delete(uid int) (err error) {
+func (u *user_service) Delete(id int) (err error) {
 	return
 }
 
-func (u *user_service) Update(user User) (err error) {
+func (u *user_service) Update(id int, user User) (err error) {
 	return
 }

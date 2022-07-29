@@ -2,9 +2,9 @@ package api
 
 type UserService interface {
 	All() (users []User, err error)
-	Get(uid int) (user User, err error)
-	Delete(uid int) (err error)
-	Update(user User) (err error)
+	Get(id int) (user User, err error)
+	Delete(id int) (err error)
+	Update(id int, user User) (err error)
 }
 
 type user_service struct {
