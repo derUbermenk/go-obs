@@ -48,13 +48,27 @@ func (mU *mockUserService) Update(user api.User) error {
 	return nil
 }
 
-func TestAllUsers(t *testing.T) {
+// sets up server to use mock user service
+// for all user handler tests
+func UserHandlersSetUp() {
 	// initialize api variables
 	user_service = &mockUserService{userRepo: userRepo}
 
 	// initialize the server using the initialized services
-	server = app.NewServer(router, user_service, bidding_service, auth_service)
+	server = app.NewServer(
+		router, user_service,
+		bidding_service, auth_service,
+	)
+}
 
+// sets the user_service and server to nil,
+// essentially resetting the values.
+func UserHandlersTearDown() {
+	user_service = nil
+	server = nil
+}
+
+func TestAllUsers(t *testing.T) {
 	router.GET(`/v1/api/users`, server.AllUsers())
 	req, _ := http.NewRequest(`GET`, `/v1/api/users`, nil)
 	w := httptest.NewRecorder()
