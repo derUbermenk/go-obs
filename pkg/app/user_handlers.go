@@ -145,7 +145,17 @@ func (s *Server) UpdateUser() gin.HandlerFunc {
 
 		err = s.user_service.Update(id, user)
 
-		if err != nil {
+		if errors.Is(err, &api.ErrNonExistentUser{}) {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "User does not exist",
+				},
+			)
+			return
+		} else if err != nil {
 			log.Printf("Handler Error: %v", err)
 			c.JSON(
 				http.StatusBadRequest,
