@@ -95,6 +95,33 @@ func TestGetUser(t *testing.T) {
 				Data:    nil,
 			}
 
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
+
+	t.Run(
+		"User Exists",
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/users/1`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: "User does not exist",
+				Data:    nil,
+			}
+
+			expected_json_response, err := json.Marshal(expected_response)
+			assert.Equal(t, err, nil)
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			json.Unmarshal(expected_json_response, &expected_response)
+
 			assert.Equal(t, http.StatusNotFound, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
