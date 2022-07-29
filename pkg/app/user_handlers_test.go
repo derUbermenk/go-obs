@@ -131,13 +131,13 @@ func TestUpdateUser(t *testing.T) {
 			recorder = send_request(request)
 
 			expected_response = &app.GenericResponse{
-				Status:  true,
+				Status:  false,
 				Message: `User does not exist`,
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
 
-			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
 			assert.Equal(t, expected_response.Data, response.Data)
 			assert.Equal(t, expected_response.Message, response.Message)
 		},
