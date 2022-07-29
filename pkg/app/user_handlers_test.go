@@ -69,6 +69,12 @@ func UserHandlersTearDown() {
 }
 
 func TestAllUsers(t *testing.T) {
+	TestSetUp()
+	UserHandlersSetUp()
+
+	defer UserHandlersTearDown()
+	defer TestTearDown()
+
 	router.GET(`/v1/api/users`, server.AllUsers())
 	req, _ := http.NewRequest(`GET`, `/v1/api/users`, nil)
 	w := httptest.NewRecorder()
@@ -97,10 +103,11 @@ func TestAllUsers(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	user_service = &mockUserService{userRepo: userRepo}
+	TestSetUp()
+	UserHandlersSetUp()
 
-	// initialize the server using the initialized services
-	server = app.NewServer(router, user_service, bidding_service, auth_service)
+	defer UserHandlersTearDown()
+	defer TestTearDown()
 
 	// prepare the request
 	router.DELETE("/user/:id/delete", server.DeleteUser())
