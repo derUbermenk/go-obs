@@ -62,7 +62,7 @@ func (s *Server) GetUser() gin.HandlerFunc {
 		if errors.Is(err, &api.ErrNonExistentUser{}) {
 			log.Printf("Handler Error: %v", err)
 			c.JSON(
-				http.StatusBadRequest,
+				http.StatusNotFound,
 				&GenericResponse{
 					Status:  false,
 					Message: "User does not exist",
@@ -82,7 +82,7 @@ func (s *Server) GetUser() gin.HandlerFunc {
 		}
 
 		c.JSON(
-			http.StatusOK,
+			http.StatusFound,
 			&GenericResponse{
 				Status:  true,
 				Message: "User retrieved",
