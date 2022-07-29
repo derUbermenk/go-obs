@@ -68,6 +68,41 @@ func TestAllUsers(t *testing.T) {
 	assert.Equal(t, expected_response.Data, response.Data)
 }
 
+func TestGetUser(t *testing.T) {
+	SetUpRouter()
+	SetUpUserHandlersTest()
+
+	defer TearDownUserHandlersTests()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/users/:id`, server.GetUser())
+
+	t.Run(
+		"User does not exist",
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/users/2`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: "User does not exist",
+				Data:    nil,
+			}
+
+			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
+}
+
 func TestDeleteUser(t *testing.T) {
 	SetUpRouter()
 	SetUpUserHandlersTest()
