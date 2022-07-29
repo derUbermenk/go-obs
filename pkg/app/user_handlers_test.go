@@ -82,24 +82,44 @@ func TestDeleteUser(t *testing.T) {
 	var recorder *httptest.ResponseRecorder
 
 	define_route(`DELETE`, `/users/:id/delete`, server.DeleteUser())
-	request = initialize_request(`DELETE`, `/users/1/delete`, nil)
-	recorder = send_request(request)
 
-	expected_byte_response, err := json.Marshal(
-		&app.GenericResponse{
-			Status:  true,
-			Message: `User successfully deleted`,
+	t.Run(
+		"User does not exist",
+		func(*testing.T) {
+			request = initialize_request(`DELETE`, `/users/2/delete`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: `User does not exist`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
 		},
 	)
 
-	assert.Equal(t, err, nil)
+	t.Run(
+		"User exists",
+		func(*testing.T) {
+			request = initialize_request(`DELETE`, `/users/1/delete`, nil)
+			recorder = send_request(request)
 
-	json.Unmarshal(expected_byte_response, &expected_response)
-	json.Unmarshal(recorder.Body.Bytes(), &response)
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `User Successfully deleted`,
+			}
 
-	assert.Equal(t, http.StatusOK, recorder.Code)
-	assert.Equal(t, expected_response.Status, response.Status)
-	assert.Equal(t, expected_response.Message, response.Message)
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
 }
 
 func TestUpdateUser(t *testing.T) {
