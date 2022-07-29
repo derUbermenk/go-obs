@@ -112,6 +112,8 @@ func TestUpdateUser(t *testing.T) {
 	var response *app.GenericResponse
 	var expected_response *app.GenericResponse
 
+	define_route(`PATCH`, `/users/:id/update`, server.UpdateUser())
+
 	var request *http.Request
 	var recorder *httptest.ResponseRecorder
 
@@ -120,20 +122,44 @@ func TestUpdateUser(t *testing.T) {
 		Email: "user2@email.com",
 	}
 
-	jsonValue, _ := json.Marshal(user)
+	// case 1. user does not exist
+	t.Run(
+		"User does not exist",
+		func(t *testing.T) {
+			jsonValue, _ := json.Marshal(user)
+			request = initialize_request(`PATCH`, `/users/2/update`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
 
-	define_route(`PATCH`, `/users/:id/update`, server.UpdateUser())
-	request = initialize_request(`PATCH`, `/users/1/update`, bytes.NewBuffer(jsonValue))
-	recorder = send_request(request)
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `User does not exist`,
+			}
 
-	expected_response = &app.GenericResponse{
-		Status:  true,
-		Message: `User successfully updated`,
-	}
+			json.Unmarshal(recorder.Body.Bytes(), &response)
 
-	json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, expected_response.Data, response.Data)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
 
-	assert.Equal(t, http.StatusOK, recorder.Code)
-	assert.Equal(t, expected_response.Data, response.Data)
-	assert.Equal(t, expected_response.Message, response.Message)
+	t.Run(
+		"User exists",
+		func(t *testing.T) {
+			jsonValue, _ := json.Marshal(user)
+			request = initialize_request(`PATCH`, `/users/1/update`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `User successfully updated`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, expected_response.Data, response.Data)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
 }
