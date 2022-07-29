@@ -74,14 +74,15 @@ func TestDeleteUser(t *testing.T) {
 	defer TearDownUserHandlersTests()
 	defer TearDownRouter()
 
-	// prepare the request
-	router.DELETE("/user/:id/delete", server.DeleteUser())
-	req, _ := http.NewRequest("DELETE", "/user/1/delete", nil)
-	w := httptest.NewRecorder()
-	router.ServeHTTP(w, req)
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
 
-	response := &app.GenericResponse{}
-	expected_response := &app.GenericResponse{}
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/users/:id/delete`, server.DeleteUser())
+	request = initialize_request(`GET`, `/users/1/delete`, nil)
+	recorder = send_request(request)
 
 	expected_byte_response, err := json.Marshal(
 		&app.GenericResponse{
@@ -92,10 +93,10 @@ func TestDeleteUser(t *testing.T) {
 
 	assert.Equal(t, err, nil)
 
-	json.Unmarshal(expected_byte_response, expected_response)
-	json.Unmarshal(w.Body.Bytes(), response)
+	json.Unmarshal(expected_byte_response, &expected_response)
+	json.Unmarshal(recorder.Body.Bytes(), &response)
 
-	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusOK, recorder.Code)
 	assert.Equal(t, expected_response.Status, response.Status)
 	assert.Equal(t, expected_response.Message, response.Message)
 }
