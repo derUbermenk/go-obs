@@ -21,18 +21,18 @@ var user_service api.UserService
 var bidding_service api.BiddingService
 var auth_service api.AuthService
 
-func SetUpTests() {
+func SetUpRouter() {
 	router = gin.Default()
 	router.Use(cors.Default())
 }
 
-func TearDownTests() {
+func TearDownRouter() {
 	router = nil
 }
 
 func TestApiStatus(t *testing.T) {
-	SetUpTests()
-	defer TearDownTests()
+	SetUpRouter()
+	defer TearDownRouter()
 
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 
