@@ -44,15 +44,18 @@ func TearDownRouter() {
 }
 
 // defines the route to be used for testing the handler
-func define_route(method string, path string, handler_func gin.HandlerFunc) {
-	router.Handle(method, path, handler_func)
+func define_route(method string, path string, handler gin.HandlerFunc) {
+	router.Handle(method, path, handler)
 }
 
+// initializes a request given the rest method, the path associated with the method
+// and any additional info in the body
 func initialize_request(method string, path string, body io.Reader) *http.Request {
 	req, _ := http.NewRequest(method, path, body)
 	return req
 }
 
+// sends the request to via the router
 func send_request(req *http.Request) *httptest.ResponseRecorder {
 	rec := httptest.NewRecorder()
 	router.ServeHTTP(rec, req)
