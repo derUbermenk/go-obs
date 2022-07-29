@@ -111,9 +111,9 @@ func TestGetUser(t *testing.T) {
 			recorder = send_request(request)
 
 			expected_response = &app.GenericResponse{
-				Status:  false,
-				Message: "User does not exist",
-				Data:    nil,
+				Status:  true,
+				Message: "User retrieved",
+				Data:    userRepo[1],
 			}
 
 			expected_json_response, err := json.Marshal(expected_response)
@@ -122,7 +122,7 @@ func TestGetUser(t *testing.T) {
 			json.Unmarshal(recorder.Body.Bytes(), &response)
 			json.Unmarshal(expected_json_response, &expected_response)
 
-			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, http.StatusFound, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
