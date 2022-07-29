@@ -34,11 +34,17 @@ func (mU *mockUserService) Get(userID int) (api.User, error) {
 
 func (mU *mockUserService) Delete(userID int) error {
 	// simulate a successful delete operation
+	_, exists := mU.userRepo[userID]
+
+	if !exists {
+		return &api.ErrNonExistentUser{}
+	}
+
 	return nil
 }
 
-func (mU *mockUserService) Update(id int, user api.User) error {
-	_, exists := mU.userRepo[id]
+func (mU *mockUserService) Update(userID int, user api.User) error {
+	_, exists := mU.userRepo[userID]
 
 	if !exists {
 		return &api.ErrNonExistentUser{}
