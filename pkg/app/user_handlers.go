@@ -87,16 +87,25 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 
 		err = s.user_service.Delete(parsed_id)
 
-		if err != nil {
-			log.Printf("Service Error: %v", err)
+		if errors.Is(err, &api.ErrNonExistentUser{}) {
+			log.Printf("Handler Error: %v", err)
 			c.JSON(
-				http.StatusInternalServerError,
+				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "Error deleting user",
+					Message: "User does not exist",
 				},
 			)
-
+			return
+		} else if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to delete user",
+				},
+			)
 			return
 		}
 

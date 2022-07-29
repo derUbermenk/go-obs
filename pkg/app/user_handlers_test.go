@@ -110,7 +110,7 @@ func TestDeleteUser(t *testing.T) {
 
 			expected_response = &app.GenericResponse{
 				Status:  true,
-				Message: `User Successfully deleted`,
+				Message: `User successfully deleted`,
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
