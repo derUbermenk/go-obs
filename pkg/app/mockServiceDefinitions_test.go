@@ -1,6 +1,8 @@
 package app_test
 
-import "online-bidding-system/pkg/api"
+import (
+	"online-bidding-system/pkg/api"
+)
 
 // this must be the same as that defined in api definition of the user.
 // this is made so that no api code is called in this test
@@ -36,5 +38,11 @@ func (mU *mockUserService) Delete(userID int) error {
 }
 
 func (mU *mockUserService) Update(id int, user api.User) error {
+	_, exists := mU.userRepo[id]
+
+	if !exists {
+		return &api.ErrNonExistentUser{}
+	}
+
 	return nil
 }
