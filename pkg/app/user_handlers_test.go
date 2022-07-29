@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -114,8 +115,15 @@ func TestUpdateUser(t *testing.T) {
 	var request *http.Request
 	var recorder *httptest.ResponseRecorder
 
+	user := api.User{
+		Name:  "User One 2.0",
+		Email: "user2@email.com",
+	}
+
+	jsonValue, _ := json.Marshal(user)
+
 	define_route(`PATCH`, `/users/:id/update`, server.UpdateUser())
-	request = initialize_request(`UPDATE`, `/users/1/update`, nil)
+	request = initialize_request(`UPDATE`, `/users/1/update`, bytes.NewBuffer(jsonValue))
 	recorder = send_request(request)
 
 	expected_response = &app.GenericResponse{
