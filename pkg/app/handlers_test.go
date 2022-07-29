@@ -22,6 +22,15 @@ var user_service api.UserService
 var bidding_service api.BiddingService
 var auth_service api.AuthService
 
+func TestSetUp() {
+	router = gin.Default()
+	router.Use(cors.Default())
+}
+
+func TestTearDown() {
+	router = nil
+}
+
 func TestMain(m *testing.M) {
 
 	// initialize a router
