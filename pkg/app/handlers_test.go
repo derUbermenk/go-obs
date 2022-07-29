@@ -42,6 +42,15 @@ func TearDownRouter() {
 	router = nil
 }
 
+// defines the route to be used for testing the handler
+func define_route(
+	method string,
+	path string,
+	handler_func gin.HandlerFunc,
+) {
+	router.Handle(method, path, handler_func)
+}
+
 func TestApiStatus(t *testing.T) {
 	SetUpRouter()
 	defer TearDownRouter()
