@@ -21,11 +21,23 @@ var user_service api.UserService
 var bidding_service api.BiddingService
 var auth_service api.AuthService
 
+// sets up the router. Call this at the start of every test
+// to ensure router defintion is independent of all tests.
+//
+// had problems earlier where any endpoint with params can not read
+// the params when defined after an endpoint without any params.
+// this was solved by either:
+//
+// 1. defining a dummy endpoint at the start
+// of all tests (problematic as requires to keep track of test order)
+// or
+// 2. define router setup to be run for every test which led to this function
 func SetUpRouter() {
 	router = gin.Default()
 	router.Use(cors.Default())
 }
 
+// tears down the router, effectively setting it to nil for formality's sake.
 func TearDownRouter() {
 	router = nil
 }
