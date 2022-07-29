@@ -68,11 +68,12 @@ func TestApiStatus(t *testing.T) {
 
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 
-	// define the route
-	router.GET(`/v1/api/status`, server.ApiStatus())
-	req, _ := http.NewRequest(`GET`, `/v1/api/status`, nil)
-	w := httptest.NewRecorder()
-	router.ServeHTTP(w, req)
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/status`, server.ApiStatus())
+	request = initialize_request(`GET`, `/status`, nil)
+	recorder = send_request(request)
 
 	var response *app.GenericResponse
 	expected_response := &app.GenericResponse{
@@ -80,7 +81,7 @@ func TestApiStatus(t *testing.T) {
 		Message: "Bidding System API running smoothly",
 	}
 
-	json.Unmarshal(w.Body.Bytes(), &response)
-	assert.Equal(t, http.StatusOK, w.Code)
+	json.Unmarshal(recorder.Body.Bytes(), &response)
+	assert.Equal(t, http.StatusOK, recorder.Code)
 	assert.Equal(t, expected_response, response)
 }
