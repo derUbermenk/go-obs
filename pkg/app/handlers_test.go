@@ -6,7 +6,6 @@ import (
 	"net/http/httptest"
 	"online-bidding-system/pkg/api"
 	"online-bidding-system/pkg/app"
-	"os"
 	"testing"
 
 	"github.com/gin-contrib/cors"
@@ -22,27 +21,19 @@ var user_service api.UserService
 var bidding_service api.BiddingService
 var auth_service api.AuthService
 
-func TestSetUp() {
+func SetUpTests() {
 	router = gin.Default()
 	router.Use(cors.Default())
 }
 
-func TestTearDown() {
+func TearDownTests() {
 	router = nil
 }
 
-func TestMain(m *testing.M) {
-
-	// initialize a router
-	router = gin.Default()
-	router.Use(cors.Default())
-	// initialize a server with the router
-
-	exitValue := m.Run()
-	os.Exit(exitValue)
-}
-
 func TestApiStatus(t *testing.T) {
+	SetUpTests()
+	defer TearDownTests()
+
 	server = app.NewServer(router, user_service, bidding_service, auth_service)
 
 	// define the route

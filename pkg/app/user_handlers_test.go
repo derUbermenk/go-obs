@@ -50,7 +50,7 @@ func (mU *mockUserService) Update(user api.User) error {
 
 // sets up server to use mock user service
 // for all user handler tests
-func UserHandlersSetUp() {
+func SetUpUserHandlersTest() {
 	// initialize api variables
 	user_service = &mockUserService{userRepo: userRepo}
 
@@ -63,17 +63,17 @@ func UserHandlersSetUp() {
 
 // sets the user_service and server to nil,
 // essentially resetting the values.
-func UserHandlersTearDown() {
+func TearDownUserHandlersTests() {
 	user_service = nil
 	server = nil
 }
 
 func TestAllUsers(t *testing.T) {
-	TestSetUp()
-	UserHandlersSetUp()
+	SetUpTests()
+	SetUpUserHandlersTest()
 
-	defer UserHandlersTearDown()
-	defer TestTearDown()
+	defer TearDownUserHandlersTests()
+	defer TearDownTests()
 
 	router.GET(`/v1/api/users`, server.AllUsers())
 	req, _ := http.NewRequest(`GET`, `/v1/api/users`, nil)
@@ -103,11 +103,11 @@ func TestAllUsers(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	TestSetUp()
-	UserHandlersSetUp()
+	SetUpTests()
+	SetUpUserHandlersTest()
 
-	defer UserHandlersTearDown()
-	defer TestTearDown()
+	defer TearDownUserHandlersTests()
+	defer TearDownTests()
 
 	// prepare the request
 	router.DELETE("/user/:id/delete", server.DeleteUser())
