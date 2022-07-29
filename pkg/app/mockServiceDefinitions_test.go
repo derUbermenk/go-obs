@@ -11,12 +11,12 @@ type mockUserService struct {
 }
 
 var userRepo = map[int]api.User{
-	0: api.User{
+	0: {
 		Name:           "User One",
 		Email:          "user1@email.com",
 		HashedPassword: "x120asd",
 	},
-	1: api.User{
+	1: {
 		Name:           "User Two",
 		Email:          "user2@email.com",
 		HashedPassword: "y562ash",
