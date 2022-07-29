@@ -35,6 +35,6 @@ func (mU *mockUserService) Delete(userID int) error {
 	return nil
 }
 
-func (mU *mockUserService) Update(user api.User) error {
+func (mU *mockUserService) Update(id int, user api.User) error {
 	return nil
 }
