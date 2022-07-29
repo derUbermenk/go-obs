@@ -29,7 +29,13 @@ func (mU *mockUserService) All() ([]api.User, error) {
 }
 
 func (mU *mockUserService) Get(userID int) (api.User, error) {
-	return mU.userRepo[userID], nil
+	user, exists := mU.userRepo[userID]
+
+	if !exists {
+		return user, &api.ErrNonExistentUser{}
+	}
+
+	return user, nil
 }
 
 func (mU *mockUserService) Delete(userID int) error {
