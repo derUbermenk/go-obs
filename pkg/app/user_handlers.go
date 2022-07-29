@@ -38,6 +38,60 @@ func (s *Server) AllUsers() gin.HandlerFunc {
 	}
 }
 
+func (s *Server) GetUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var id int
+		var user api.User
+		var err error
+		id, err = strconv.Atoi(c.Param(`id`))
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to get user",
+				},
+			)
+			return
+		}
+
+		user, err = s.user_service.Get(id)
+
+		if errors.Is(err, &api.ErrNonExistentUser{}) {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "User does not exist",
+				},
+			)
+			return
+		} else if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to get user",
+				},
+			)
+			return
+		}
+
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: "User retrieved",
+				Data:    user,
+			},
+		)
+	}
+}
+
 func (s *Server) DeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// get id param
