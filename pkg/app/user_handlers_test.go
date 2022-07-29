@@ -123,7 +123,7 @@ func TestUpdateUser(t *testing.T) {
 	jsonValue, _ := json.Marshal(user)
 
 	define_route(`PATCH`, `/users/:id/update`, server.UpdateUser())
-	request = initialize_request(`UPDATE`, `/users/1/update`, bytes.NewBuffer(jsonValue))
+	request = initialize_request(`PATCH`, `/users/1/update`, bytes.NewBuffer(jsonValue))
 	recorder = send_request(request)
 
 	expected_response = &app.GenericResponse{
@@ -134,5 +134,6 @@ func TestUpdateUser(t *testing.T) {
 	json.Unmarshal(recorder.Body.Bytes(), &response)
 
 	assert.Equal(t, http.StatusOK, recorder.Code)
-	assert.Equal(t, expected_response, response)
+	assert.Equal(t, expected_response.Data, response.Data)
+	assert.Equal(t, expected_response.Message, response.Message)
 }
