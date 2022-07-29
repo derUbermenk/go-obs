@@ -94,25 +94,9 @@ func (s *Server) GetUser() gin.HandlerFunc {
 
 func (s *Server) DeleteUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// get id param
-		id := c.Param(`id`)
-
-		if id == "" {
-			err := errors.New("no id param")
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusBadRequest,
-				&GenericResponse{
-					Status:  false,
-					Message: err.Error(),
-				},
-			)
-
-			return
-		}
-
-		// parse id param
-		parsed_id, err := strconv.Atoi(id)
+		var id int
+		var err error
+		id, err = strconv.Atoi(c.Param(`id`))
 
 		if err != nil {
 			log.Printf("Handler Error: %v", err)
@@ -120,26 +104,13 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: err.Error(),
+					Message: "Unable to update user",
 				},
 			)
 			return
 		}
 
-		if err != nil {
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusInternalServerError,
-				&GenericResponse{
-					Status:  false,
-					Message: "Error handling Request",
-				},
-			)
-
-			return
-		}
-
-		err = s.user_service.Delete(parsed_id)
+		err = s.user_service.Delete(id)
 
 		if errors.Is(err, &api.ErrNonExistentUser{}) {
 			log.Printf("Handler Error: %v", err)
