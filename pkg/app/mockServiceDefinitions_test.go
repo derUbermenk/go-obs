@@ -58,3 +58,28 @@ func (mU *mockUserService) Update(userID int, user api.User) error {
 
 	return nil
 }
+
+type mockBiddingService struct {
+	biddingRepo map[int]api.Bidding
+}
+
+var biddingRepo = map[int]api.Bidding{
+	0: {},
+	1: {},
+}
+
+func (mB *mockBiddingService) All() (biddings []api.Bidding, err error) {
+	return
+}
+
+func (b *mockBiddingService) Get(bID int) (bidding api.Bidding, err error) {
+	return
+}
+
+func (b *mockBiddingService) Delete(bID int) (err error) {
+	return
+}
+
+func (b *mockBiddingService) Update(bidding api.Bidding) (err error) {
+	return
+}
