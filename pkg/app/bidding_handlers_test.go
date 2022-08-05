@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -124,6 +125,67 @@ func TestGetBidding(t *testing.T) {
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
+}
+
+func TestUpdateBidding(t *testing.T) {
+	SetUpRouter()
+	SetUpBiddingHandlersTest()
+
+	defer TearDownBiddingHandlersTests()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	define_route(`PATCH`, `/biddings/:id/update`, server.UpdateBidding())
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	// the updated fields are not necessary
+	// we only care about the response
+	bidding := api.Bidding{}
+
+	// case 1. user does not exist
+	t.Run(
+		"Bidding does not exist",
+		func(t *testing.T) {
+			jsonValue, _ := json.Marshal(bidding)
+			request = initialize_request(`PATCH`, `/biddings/2/update`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: `Bidding does not exist`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, expected_response.Data, response.Data)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
+
+	t.Run(
+		"Bidding exists",
+		func(t *testing.T) {
+			jsonValue, _ := json.Marshal(bidding)
+			request = initialize_request(`PATCH`, `/biddings/1/update`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `Bidding successfully updated`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, expected_response.Data, response.Data)
+			assert.Equal(t, expected_response.Message, response.Message)
 		},
 	)
 }
