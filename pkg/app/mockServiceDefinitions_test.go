@@ -69,7 +69,10 @@ var biddingRepo = map[int]api.Bidding{
 }
 
 func (mB *mockBiddingService) All() (biddings []api.Bidding, err error) {
-	return
+	return []api.Bidding{
+		biddingRepo[0],
+		biddingRepo[1],
+	}, nil
 }
 
 func (b *mockBiddingService) Get(bID int) (bidding api.Bidding, err error) {
