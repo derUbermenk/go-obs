@@ -32,7 +32,7 @@ func (mU *mockUserService) Get(userID int) (api.User, error) {
 	user, exists := mU.userRepo[userID]
 
 	if !exists {
-		return user, &api.ErrNonExistentUser{}
+		return user, &api.ErrNonExistentResource{}
 	}
 
 	return user, nil
@@ -43,7 +43,7 @@ func (mU *mockUserService) Delete(userID int) error {
 	_, exists := mU.userRepo[userID]
 
 	if !exists {
-		return &api.ErrNonExistentUser{}
+		return &api.ErrNonExistentResource{}
 	}
 
 	return nil
@@ -53,7 +53,7 @@ func (mU *mockUserService) Update(userID int, user api.User) error {
 	_, exists := mU.userRepo[userID]
 
 	if !exists {
-		return &api.ErrNonExistentUser{}
+		return &api.ErrNonExistentResource{}
 	}
 
 	return nil
@@ -79,7 +79,7 @@ func (mB *mockBiddingService) Get(biddingID int) (bidding api.Bidding, err error
 	bidding, exists := mB.biddingRepo[biddingID]
 
 	if !exists {
-		return bidding, &api.ErrNonExistentUser{}
+		return bidding, &api.ErrNonExistentResource{}
 	}
 
 	return bidding, nil
@@ -93,7 +93,7 @@ func (mU *mockBiddingService) Update(biddingID int, bidding api.Bidding) (err er
 	_, exists := mU.biddingRepo[biddingID]
 
 	if !exists {
-		return &api.ErrNonExistentUser{}
+		return &api.ErrNonExistentResource{}
 	}
 
 	return nil

@@ -59,7 +59,7 @@ func (s *Server) GetBidding() gin.HandlerFunc {
 
 		bidding, err = s.bidding_service.Get(id)
 
-		if errors.Is(err, &api.ErrNonExistentUser{}) {
+		if errors.Is(err, &api.ErrNonExistentResource{}) {
 			log.Printf("Handler Error: %v", err)
 			c.JSON(
 				http.StatusNotFound,
@@ -127,7 +127,7 @@ func (s *Server) UpdateBidding() gin.HandlerFunc {
 
 		err = s.bidding_service.Update(id, bidding)
 
-		if errors.Is(err, &api.ErrNonExistentUser{}) {
+		if errors.Is(err, &api.ErrNonExistentResource{}) {
 			log.Printf("Handler Error: %v", err)
 			c.JSON(
 				http.StatusBadRequest,
