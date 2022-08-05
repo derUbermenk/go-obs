@@ -89,6 +89,12 @@ func (b *mockBiddingService) Delete(bID int) (err error) {
 	return
 }
 
-func (b *mockBiddingService) Update(bidding api.Bidding) (err error) {
-	return
+func (mU *mockBiddingService) Update(biddingID int, bidding api.Bidding) (err error) {
+	_, exists := mU.biddingRepo[biddingID]
+
+	if !exists {
+		return &api.ErrNonExistentUser{}
+	}
+
+	return nil
 }
