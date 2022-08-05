@@ -75,8 +75,14 @@ func (mB *mockBiddingService) All() (biddings []api.Bidding, err error) {
 	}, nil
 }
 
-func (b *mockBiddingService) Get(bID int) (bidding api.Bidding, err error) {
-	return
+func (mB *mockBiddingService) Get(biddingID int) (bidding api.Bidding, err error) {
+	bidding, exists := mB.biddingRepo[biddingID]
+
+	if !exists {
+		return bidding, &api.ErrNonExistentUser{}
+	}
+
+	return bidding, nil
 }
 
 func (b *mockBiddingService) Delete(bID int) (err error) {

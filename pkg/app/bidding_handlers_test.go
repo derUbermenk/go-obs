@@ -65,3 +65,65 @@ func TestAllBiddings(t *testing.T) {
 	assert.Equal(t, expected_response.Message, response.Message)
 	assert.Equal(t, expected_response.Data, response.Data)
 }
+
+func TestGetBidding(t *testing.T) {
+	SetUpRouter()
+	SetUpBiddingHandlersTest()
+
+	defer TearDownBiddingHandlersTests()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/biddings/:id`, server.GetBidding())
+
+	t.Run(
+		"Bidding does not exist",
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/biddings/2`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: "Bidding does not exist",
+				Data:    nil,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
+
+	t.Run(
+		"Bidding Exists",
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/biddings/1`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: "Bidding retrieved",
+				Data:    biddingRepo[1],
+			}
+
+			expected_json_response, err := json.Marshal(expected_response)
+			assert.Equal(t, err, nil)
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			json.Unmarshal(expected_json_response, &expected_response)
+
+			assert.Equal(t, http.StatusFound, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
+}
