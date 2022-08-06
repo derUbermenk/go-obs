@@ -10,9 +10,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) AllUsers() gin.HandlerFunc {
+func (s *Server) AllBiddings() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		users, err := s.user_service.All()
+		biddings, err := s.bidding_service.All()
 
 		if err != nil {
 			log.Printf("Service Error: %v", err)
@@ -20,7 +20,7 @@ func (s *Server) AllUsers() gin.HandlerFunc {
 				http.StatusInternalServerError,
 				&GenericResponse{
 					Status:  false,
-					Message: "Error retrieving users",
+					Message: "Error retrieving biddings",
 				},
 			)
 
@@ -31,17 +31,17 @@ func (s *Server) AllUsers() gin.HandlerFunc {
 			http.StatusOK,
 			&GenericResponse{
 				Status:  true,
-				Message: "Users successfully retrieved",
-				Data:    users,
+				Message: "Biddings successfully retrieved",
+				Data:    biddings,
 			},
 		)
 	}
 }
 
-func (s *Server) GetUser() gin.HandlerFunc {
+func (s *Server) GetBidding() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var id int
-		var user api.User
+		var bidding api.Bidding
 		var err error
 		id, err = strconv.Atoi(c.Param(`id`))
 
@@ -51,13 +51,13 @@ func (s *Server) GetUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "Unable to get user",
+					Message: "Unable to get bidding",
 				},
 			)
 			return
 		}
 
-		user, err = s.user_service.Get(id)
+		bidding, err = s.bidding_service.Get(id)
 
 		if errors.Is(err, &api.ErrNonExistentResource{}) {
 			log.Printf("Handler Error: %v", err)
@@ -65,7 +65,7 @@ func (s *Server) GetUser() gin.HandlerFunc {
 				http.StatusNotFound,
 				&GenericResponse{
 					Status:  false,
-					Message: "User does not exist",
+					Message: "Bidding does not exist",
 				},
 			)
 			return
@@ -75,7 +75,7 @@ func (s *Server) GetUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "Unable to get user",
+					Message: "Unable to get bidding",
 				},
 			)
 			return
@@ -85,14 +85,81 @@ func (s *Server) GetUser() gin.HandlerFunc {
 			http.StatusFound,
 			&GenericResponse{
 				Status:  true,
-				Message: "User retrieved",
-				Data:    user,
+				Message: "Bidding retrieved",
+				Data:    bidding,
 			},
 		)
 	}
 }
 
-func (s *Server) DeleteUser() gin.HandlerFunc {
+func (s *Server) UpdateBidding() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var id int
+		var bidding api.Bidding
+		var err error
+		id, err = strconv.Atoi(c.Param(`id`))
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update bidding",
+				},
+			)
+			return
+		}
+
+		err = c.ShouldBindJSON(&bidding)
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update bidding",
+				},
+			)
+			return
+		}
+
+		err = s.bidding_service.Update(id, bidding)
+
+		if errors.Is(err, &api.ErrNonExistentResource{}) {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Bidding does not exist",
+				},
+			)
+			return
+		} else if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to update bidding",
+				},
+			)
+			return
+		}
+
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: "Bidding successfully updated",
+			},
+		)
+	}
+}
+
+func (s *Server) DeleteBidding() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var id int
 		var err error
@@ -104,13 +171,13 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "Unable to update user",
+					Message: "Unable to delete bidding",
 				},
 			)
 			return
 		}
 
-		err = s.user_service.Delete(id)
+		err = s.bidding_service.Delete(id)
 
 		if errors.Is(err, &api.ErrNonExistentResource{}) {
 			log.Printf("Handler Error: %v", err)
@@ -118,7 +185,7 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "User does not exist",
+					Message: "Bidding does not exist",
 				},
 			)
 			return
@@ -128,7 +195,7 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 				http.StatusBadRequest,
 				&GenericResponse{
 					Status:  false,
-					Message: "Unable to delete user",
+					Message: "Unable to delete bidding",
 				},
 			)
 			return
@@ -138,74 +205,7 @@ func (s *Server) DeleteUser() gin.HandlerFunc {
 			http.StatusOK,
 			&GenericResponse{
 				Status:  true,
-				Message: "User successfully deleted",
-			},
-		)
-	}
-}
-
-func (s *Server) UpdateUser() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var id int
-		var user api.User
-		var err error
-		id, err = strconv.Atoi(c.Param(`id`))
-
-		if err != nil {
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusBadRequest,
-				&GenericResponse{
-					Status:  false,
-					Message: "Unable to update user",
-				},
-			)
-			return
-		}
-
-		err = c.ShouldBindJSON(&user)
-
-		if err != nil {
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusBadRequest,
-				&GenericResponse{
-					Status:  false,
-					Message: "Unable to update user",
-				},
-			)
-			return
-		}
-
-		err = s.user_service.Update(id, user)
-
-		if errors.Is(err, &api.ErrNonExistentResource{}) {
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusBadRequest,
-				&GenericResponse{
-					Status:  false,
-					Message: "User does not exist",
-				},
-			)
-			return
-		} else if err != nil {
-			log.Printf("Handler Error: %v", err)
-			c.JSON(
-				http.StatusBadRequest,
-				&GenericResponse{
-					Status:  false,
-					Message: "Unable to update user",
-				},
-			)
-			return
-		}
-
-		c.JSON(
-			http.StatusOK,
-			&GenericResponse{
-				Status:  true,
-				Message: "User successfully updated",
+				Message: "Bidding successfully deleted",
 			},
 		)
 	}

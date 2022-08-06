@@ -1,14 +1,14 @@
 package api
 
-type ErrNonExistentUser struct {
+type ErrNonExistentResource struct {
 }
 
-func (e *ErrNonExistentUser) Error() string {
-	return "Non existent user"
+func (e *ErrNonExistentResource) Error() string {
+	return "Non existent resource"
 }
 
-func (e *ErrNonExistentUser) Is(target error) bool {
-	_, isType := target.(*ErrNonExistentUser)
+func (e *ErrNonExistentResource) Is(target error) bool {
+	_, isType := target.(*ErrNonExistentResource)
 
 	return isType
 }

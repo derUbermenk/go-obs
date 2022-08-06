@@ -18,6 +18,6 @@ func (b *bidding_service) Delete(bID int) (err error) {
 	return
 }
 
-func (b *bidding_service) Update(bidding Bidding) (err error) {
+func (b *bidding_service) Update(id int, bidding Bidding) (err error) {
 	return
 }
