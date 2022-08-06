@@ -158,3 +158,55 @@ func (s *Server) UpdateBidding() gin.HandlerFunc {
 		)
 	}
 }
+
+func (s *Server) DeleteBidding() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var id int
+		var err error
+		id, err = strconv.Atoi(c.Param(`id`))
+
+		if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to delete bidding",
+				},
+			)
+			return
+		}
+
+		err = s.bidding_service.Delete(id)
+
+		if errors.Is(err, &api.ErrNonExistentResource{}) {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Bidding does not exist",
+				},
+			)
+			return
+		} else if err != nil {
+			log.Printf("Handler Error: %v", err)
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: "Unable to delete bidding",
+				},
+			)
+			return
+		}
+
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: "Bidding successfully deleted",
+			},
+		)
+	}
+}
