@@ -245,3 +245,45 @@ func TestUpdateUser(t *testing.T) {
 		},
 	)
 }
+
+func TestPlaceBid(t *testing.T) {
+	SetUpRouter()
+	SetUpUserHandlersTest()
+
+	defer TearDownUserHandlersTests()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	define_route(`POST`, `/users/:userID/placebid/:biddingID`, server.PlaceBid())
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	// placing bids will have 3 cases
+	// 1. user placing the bid does not exist
+	// 2. bidding does not exist
+	// 3. the 2 resources being manipulated exists
+
+	t.Run(
+		`User placing the bid does not exist`,
+		func(t *testing.T) {
+
+		},
+	)
+
+	t.Run(
+		`Bidding does not exist`,
+		func(t *testing.T) {
+
+		},
+	)
+
+	t.Run(
+		`All resources exist`,
+		func(t *testing.T) {
+
+		},
+	)
+}
