@@ -154,3 +154,20 @@ func TestCreateBid(t *testing.T) {
 		},
 	)
 }
+
+func TestUpdateBid(t *testing.T) {
+	SetUpRouter()
+	SetUpBidHandlersTest()
+
+	defer TearDownBidHandlersTest()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`PUT`, `/bids/:bidID`, server.UpdateBid())
+
+}
