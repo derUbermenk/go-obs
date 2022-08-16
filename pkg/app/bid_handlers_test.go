@@ -13,11 +13,18 @@ import (
 )
 
 func SetUpBidHandlersTest() {
+	bid_service = &mockBidService{}
 
+	server = app.NewServer(
+		router, user_service,
+		bidding_service, bid_service,
+		auth_service,
+	)
 }
 
 func TearDownBidHandlersTest() {
-
+	bid_service = nil
+	server = nil
 }
 
 func TestCreateBid(t *testing.T) {
