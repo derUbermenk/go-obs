@@ -22,6 +22,12 @@ type bidding_service struct {
 	biddingRepo BidRepository
 }
 
+type BidService interface {
+	CreateBid(bidderID, biddingID, bidAmount int) (bidID int, err error)
+}
+
+type bid_service struct{}
+
 type AuthService interface {
 	ValidateCredentials(email, password string) (validity bool, err error)
 	GenerateAccessToken(email string, expiration int64) (signed_access_token string, err error)
