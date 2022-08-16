@@ -93,4 +93,34 @@ func TestCreateBid(t *testing.T) {
 			assert.Equal(t, response.Data, expected_response.Data)
 		},
 	)
+
+	// case 3: bidding does not exist
+	t.Run(
+		`Bidding does not exist`,
+		func(t *testing.T) {
+
+			createBidRequest := &api.CreateBidRequest{
+				ID:        1,
+				BidderID:  1,
+				BiddingId: 2,
+				Amount:    100,
+			}
+
+			jsonValue, _ := json.Marshal(createBidRequest)
+
+			request = initialize_request(`POST`, `/bids`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: `Bidding does not exist`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
 }
