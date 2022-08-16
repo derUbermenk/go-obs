@@ -123,4 +123,34 @@ func TestCreateBid(t *testing.T) {
 			assert.Equal(t, response.Data, expected_response.Data)
 		},
 	)
+
+	// case 4: All values are valid
+	t.Run(
+		`All values are valid`,
+		func(t *testing.T) {
+			createBidRequest := &api.CreateBidRequest{
+				ID:        1,
+				BidderID:  1,
+				BiddingId: 1,
+				Amount:    100,
+			}
+
+			jsonValue, _ := json.Marshal(createBidRequest)
+
+			request = initialize_request(`POST`, `/bids`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `Bid Created`,
+				Data:    1,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
 }
