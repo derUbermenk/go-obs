@@ -168,7 +168,7 @@ func TestUpdateBid(t *testing.T) {
 	var request *http.Request
 	var recorder *httptest.ResponseRecorder
 
-	define_route(`PUT`, `/bids/:bidID`, server.UpdateBid())
+	define_route(`PATCH`, `/bids/:bidID`, server.UpdateBid())
 
 	// case 1: amount is lower than lowest allowable bid or current top bid amount
 	t.Run(
@@ -180,7 +180,7 @@ func TestUpdateBid(t *testing.T) {
 
 			jsonValue, _ := json.Marshal(updateBidRequest)
 
-			request = initialize_request(`PUT`, `/bids/1`, bytes.NewBuffer(jsonValue))
+			request = initialize_request(`PATCH`, `/bids/1`, bytes.NewBuffer(jsonValue))
 			recorder = send_request(request)
 
 			expected_response = &app.GenericResponse{
