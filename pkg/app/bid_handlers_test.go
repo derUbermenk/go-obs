@@ -128,7 +128,7 @@ func TestCreateBid(t *testing.T) {
 			createBidRequest := &api.CreateBidRequest{
 				BidderID:  1,
 				BiddingId: 1,
-				Amount:    100,
+				Amount:    200,
 			}
 
 			jsonValue, _ := json.Marshal(createBidRequest)
@@ -138,7 +138,7 @@ func TestCreateBid(t *testing.T) {
 
 			expected_response = &app.GenericResponse{
 				Status:  true,
-				Message: `Bid Created`,
+				Message: `Bid created`,
 				Data:    1,
 			}
 
