@@ -17,7 +17,8 @@ func SetUpBidHandlersTest() {
 
 	server = app.NewServer(
 		router, user_service,
-		bidding_service, bid_service,
+		bid_service,
+		bidding_service,
 		auth_service,
 	)
 }
