@@ -19,6 +19,7 @@ var router *gin.Engine
 
 // initialize api variables
 var user_service api.UserService
+var bid_service api.BidService
 var bidding_service api.BiddingService
 var auth_service api.AuthService
 
