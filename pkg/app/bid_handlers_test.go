@@ -195,4 +195,30 @@ func TestUpdateBid(t *testing.T) {
 			assert.Equal(t, response.Data, expected_response.Data)
 		},
 	)
+
+	// case 2: all values pass
+	t.Run(
+		`All values pass`,
+		func(t *testing.T) {
+			updateBidRequest := &api.Bidding{
+				Amount: 200,
+			}
+
+			jsonValue, _ := json.Marshal(updateBidRequest)
+
+			request = initialize_request(`PATCH`, `/bids/1`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `Bid updated`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
 }
