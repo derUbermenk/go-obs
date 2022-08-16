@@ -16,12 +16,13 @@ type Server struct {
 }
 
 func NewServer(
-	router *gin.Engine, user_service api.UserService,
+	router *gin.Engine, user_service api.UserService, bid_service api.BidService,
 	bidding_service api.BiddingService, auth_service api.AuthService,
 ) *Server {
 	return &Server{
 		router:          router,
 		user_service:    user_service,
+		bid_service:     bid_service,
 		bidding_service: bidding_service,
 		auth_service:    auth_service,
 	}
