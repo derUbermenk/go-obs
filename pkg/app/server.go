@@ -10,6 +10,7 @@ import (
 type Server struct {
 	router          *gin.Engine
 	user_service    api.UserService
+	bid_service     api.BidService
 	bidding_service api.BiddingService
 	auth_service    api.AuthService
 }
