@@ -170,4 +170,29 @@ func TestUpdateBid(t *testing.T) {
 
 	define_route(`PUT`, `/bids/:bidID`, server.UpdateBid())
 
+	// case 1: amount is lower than lowest allowable bid or current top bid amount
+	t.Run(
+		`Amount is lower than lowest allowable bid or current top bid amount`,
+		func(t *testing.T) {
+			updateBidRequest := &api.Bidding{
+				Amount: 100,
+			}
+
+			jsonValue, _ := json.Marshal(updateBidRequest)
+
+			request = initialize_request(`PUT`, `/bids/1`, bytes.NewBuffer(jsonValue))
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: `The bid amount is lower than lowest allowable bid`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, response.Status, expected_response.Status)
+			assert.Equal(t, response.Message, expected_response.Message)
+			assert.Equal(t, response.Data, expected_response.Data)
+		},
+	)
 }
