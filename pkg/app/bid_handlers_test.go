@@ -41,7 +41,6 @@ func TestCreateBid(t *testing.T) {
 		func(t *testing.T) {
 
 			createBidRequest := &api.CreateBidRequest{
-				ID:        1,
 				BidderID:  1,
 				BiddingId: 1,
 				Amount:    100,
@@ -70,7 +69,6 @@ func TestCreateBid(t *testing.T) {
 		func(t *testing.T) {
 
 			createBidRequest := &api.CreateBidRequest{
-				ID:        1,
 				BidderID:  2,
 				BiddingId: 1,
 				Amount:    100,
@@ -100,7 +98,6 @@ func TestCreateBid(t *testing.T) {
 		func(t *testing.T) {
 
 			createBidRequest := &api.CreateBidRequest{
-				ID:        1,
 				BidderID:  1,
 				BiddingId: 2,
 				Amount:    100,
@@ -129,7 +126,6 @@ func TestCreateBid(t *testing.T) {
 		`All values are valid`,
 		func(t *testing.T) {
 			createBidRequest := &api.CreateBidRequest{
-				ID:        1,
 				BidderID:  1,
 				BiddingId: 1,
 				Amount:    100,
