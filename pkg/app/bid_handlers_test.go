@@ -63,7 +63,7 @@ func TestCreateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusConflict, recorder.Code)
+			assert.Equal(t, http.StatusInternalServerError, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
@@ -92,7 +92,7 @@ func TestCreateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, http.StatusInternalServerError, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
@@ -121,7 +121,7 @@ func TestCreateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusNotFound, recorder.Code)
+			assert.Equal(t, http.StatusInternalServerError, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
