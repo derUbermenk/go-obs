@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"online-bidding-system/pkg/api"
 	"online-bidding-system/pkg/app"
 	"testing"
 
@@ -164,7 +165,6 @@ func TestCreateBid(t *testing.T) {
 	)
 }
 
-/*
 func TestUpdateBid(t *testing.T) {
 	SetUpRouter()
 	SetUpBidHandlersTest()
@@ -184,7 +184,8 @@ func TestUpdateBid(t *testing.T) {
 	t.Run(
 		`Amount is lower than lowest allowable bid or current top bid amount`,
 		func(t *testing.T) {
-			updateBidRequest := &api.Bidding{
+			updateBidRequest := &api.Bid{
+				ID:     1,
 				Amount: 100,
 			}
 
@@ -210,7 +211,8 @@ func TestUpdateBid(t *testing.T) {
 	t.Run(
 		`All values pass`,
 		func(t *testing.T) {
-			updateBidRequest := &api.Bidding{
+			updateBidRequest := &api.Bid{
+				ID:     1,
 				Amount: 200,
 			}
 
@@ -232,4 +234,3 @@ func TestUpdateBid(t *testing.T) {
 		},
 	)
 }
-*/
