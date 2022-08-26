@@ -8,7 +8,7 @@ import (
 	"online-bidding-system/pkg/app"
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func SetUpBidHandlersTest() {

@@ -9,7 +9,7 @@ import (
 	"online-bidding-system/pkg/app"
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 // sets up server to use mock user service
