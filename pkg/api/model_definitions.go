@@ -7,4 +7,9 @@ type User struct {
 	HashedPassword string `json:"hashedPass"`
 }
 
+type Bid struct {
+	ID     int `json:"id"`
+	Amount int `json:"amount"`
+}
+
 type Bidding struct{}
