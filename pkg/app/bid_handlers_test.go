@@ -151,10 +151,10 @@ func TestCreateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, http.StatusCreated, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
-			assert.Equal(t, response.Data, expected_response.Data)
+			assert.Equal(t, int(response.Data.(float64)), expected_response.Data)
 		},
 	)
 }
