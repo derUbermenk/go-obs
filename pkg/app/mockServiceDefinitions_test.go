@@ -133,6 +133,16 @@ func (mBid *mockBidService) CreateBid(bidderID, biddingID, bidAmount int) (bidID
 	return
 }
 
-func (mBid *mockBidService) UpdateBid(bidID, bidAmount int) (updatedBidID int, err error) {
-	return
+func (mBid *mockBidService) UpdateBid(bidID, bidAmount int) (err error) {
+	if bidAmount <= 100 {
+		err = errors.New(`The bid amount is lower than lowest allowable bid`)
+		return
+	}
+
+	if bidID != 1 {
+		err = errors.New(`The bidder with the given bidding id does not exist`)
+		return
+	}
+
+	return nil
 }
