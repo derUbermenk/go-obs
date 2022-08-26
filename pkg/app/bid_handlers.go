@@ -8,6 +8,8 @@ import (
 
 func (s *Server) CreateBid() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var createBidRequest CreateBidRequest
+
 		// get request body
 		// parse request body to &api.CreateBidRequest
 		err := c.ShouldBindJSON(createBidRequest)
@@ -24,7 +26,12 @@ func (s *Server) CreateBid() gin.HandlerFunc {
 		}
 
 		// call s.bid_service.CreateBid()
-		id, err := s.bid_service.CreateBid(createBidRequest)
+		id, err := s.bid_service.CreateBid(
+			createBidRequest.BidderID,
+			createBidRequest.BiddingID,
+			createBidRequest.Amount,
+		)
+
 		if err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
