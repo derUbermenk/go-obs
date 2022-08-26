@@ -153,6 +153,12 @@ func TestCreateBid(t *testing.T) {
 			assert.Equal(t, http.StatusCreated, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
+
+			// from stack overflow answer
+			// I am assuming: If you sent the JSON value through browser then
+			// 		any number you sent that will be the type float64 so you cant get the value directly
+			// 		int in golang.
+			// 		https://stackoverflow.com/questions/18041334/convert-interface-to-int
 			assert.Equal(t, int(response.Data.(float64)), expected_response.Data)
 		},
 	)
