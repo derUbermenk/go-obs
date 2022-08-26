@@ -54,3 +54,47 @@ func (s *Server) CreateBid() gin.HandlerFunc {
 		)
 	}
 }
+
+func (s *Server) UpdateBid() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		bid := &api.Bid{}
+
+		err := c.ShouldBindJSON(bid)
+		if err != nil {
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: err.Error(),
+				},
+			)
+
+			return
+		}
+
+		err = s.bid_service.UpdateBid(
+			bid.ID,
+			bid.Amount,
+		)
+		if err != nil {
+			c.JSON(
+				http.StatusInternalServerError,
+				&GenericResponse{
+					Status:  false,
+					Message: err.Error(),
+				},
+			)
+			return
+		}
+
+		// return
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: `Bid updated`,
+			},
+		)
+
+	}
+}
