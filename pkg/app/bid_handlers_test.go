@@ -48,9 +48,9 @@ func TestCreateBid(t *testing.T) {
 		`Amount is lower than lowest allowable bid`,
 		func(t *testing.T) {
 
-			createBidRequest := &api.CreateBidRequest{
+			createBidRequest := &app.CreateBidRequest{
 				BidderID:  1,
-				BiddingId: 1,
+				BiddingID: 1,
 				Amount:    100,
 			}
 			jsonValue, _ := json.Marshal(createBidRequest)
@@ -76,9 +76,9 @@ func TestCreateBid(t *testing.T) {
 		`Bidder does not exist`,
 		func(t *testing.T) {
 
-			createBidRequest := &api.CreateBidRequest{
+			createBidRequest := &app.CreateBidRequest{
 				BidderID:  2,
-				BiddingId: 1,
+				BiddingID: 1,
 				Amount:    100,
 			}
 
@@ -105,9 +105,9 @@ func TestCreateBid(t *testing.T) {
 		`Bidding does not exist`,
 		func(t *testing.T) {
 
-			createBidRequest := &api.CreateBidRequest{
+			createBidRequest := &app.CreateBidRequest{
 				BidderID:  1,
-				BiddingId: 2,
+				BiddingID: 2,
 				Amount:    100,
 			}
 
@@ -133,9 +133,9 @@ func TestCreateBid(t *testing.T) {
 	t.Run(
 		`All values are valid`,
 		func(t *testing.T) {
-			createBidRequest := &api.CreateBidRequest{
+			createBidRequest := &app.CreateBidRequest{
 				BidderID:  1,
-				BiddingId: 1,
+				BiddingID: 1,
 				Amount:    200,
 			}
 
