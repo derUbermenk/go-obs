@@ -8,7 +8,7 @@ import (
 
 func (s *Server) CreateBid() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var createBidRequest CreateBidRequest
+		createBidRequest := &CreateBidRequest{}
 
 		// get request body
 		// parse request body to &api.CreateBidRequest
