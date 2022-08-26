@@ -200,7 +200,7 @@ func TestUpdateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, http.StatusInternalServerError, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
@@ -227,7 +227,7 @@ func TestUpdateBid(t *testing.T) {
 			}
 
 			json.Unmarshal(recorder.Body.Bytes(), &response)
-			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, http.StatusOK, recorder.Code)
 			assert.Equal(t, response.Status, expected_response.Status)
 			assert.Equal(t, response.Message, expected_response.Message)
 			assert.Equal(t, response.Data, expected_response.Data)
