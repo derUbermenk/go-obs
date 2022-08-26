@@ -24,7 +24,7 @@ type bidding_service struct {
 
 type BidService interface {
 	CreateBid(bidderID, biddingID, bidAmount int) (bidID int, err error)
-	UpdateBid(bidID, bidAmount int) (updatedBidID int, err error)
+	UpdateBid(bidID, bidAmount int) (err error)
 }
 
 type bid_service struct{}
