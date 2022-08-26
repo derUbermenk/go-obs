@@ -67,7 +67,7 @@ func TestApiStatus(t *testing.T) {
 	SetUpRouter()
 	defer TearDownRouter()
 
-	server = app.NewServer(router, user_service, bidding_service, auth_service)
+	server = app.NewServer(router, user_service, bid_service, bidding_service, auth_service)
 
 	var request *http.Request
 	var recorder *httptest.ResponseRecorder

@@ -21,7 +21,8 @@ func SetUpUserHandlersTest() {
 	// initialize the server using the initialized services
 	server = app.NewServer(
 		router, user_service,
-		bidding_service, auth_service,
+		bid_service, bidding_service,
+		auth_service,
 	)
 }
 
