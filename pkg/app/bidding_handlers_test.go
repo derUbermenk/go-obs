@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -50,13 +51,11 @@ func (mB *mockBiddingService) Delete(biddingID int) (err error) {
 }
 
 func (mB *mockBiddingService) Update(biddingID int, bidding api.Bidding) (err error) {
-	/*
-		_, exists := mB.biddingRepo[biddingID]
+	_, exists := biddingRepo[biddingID]
 
-		if !exists {
-			return &api.ErrNonExistentResource{}
-		}
-	*/
+	if !exists {
+		return &api.ErrNonExistentResource{}
+	}
 
 	return nil
 }
@@ -231,8 +230,6 @@ func TestDeleteBidding(t *testing.T) {
 	)
 }
 
-/*
-
 func TestUpdateBidding(t *testing.T) {
 	SetUpRouter()
 	SetUpBiddingHandlersTest()
@@ -293,5 +290,3 @@ func TestUpdateBidding(t *testing.T) {
 		},
 	)
 }
-
-*/
