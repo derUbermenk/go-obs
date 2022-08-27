@@ -46,14 +46,12 @@ func (mU *mockUserService) Get(userID int) (api.User, error) {
 }
 
 func (mU *mockUserService) Delete(userID int) error {
-	// simulate a successful delete operation
-	/*
-		_, exists := mU.userRepo[userID]
+	_, exists := users[userID]
 
-		if !exists {
-			return &api.ErrNonExistentResource{}
-		}
-	*/
+	if !exists {
+		err := &api.ErrNonExistentResource{}
+		return err
+	}
 
 	return nil
 }
@@ -189,7 +187,6 @@ func TestGetUser(t *testing.T) {
 	)
 }
 
-/*
 func TestDeleteUser(t *testing.T) {
 	SetUpRouter()
 	SetUpUserHandlersTest()
@@ -244,6 +241,7 @@ func TestDeleteUser(t *testing.T) {
 	)
 }
 
+/*
 func TestUpdateUser(t *testing.T) {
 	SetUpRouter()
 	SetUpUserHandlersTest()
