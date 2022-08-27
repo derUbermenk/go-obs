@@ -14,9 +14,7 @@ import (
 
 // this must be the same as that defined in api definition of the user.
 // this is made so that no api code is called in this test
-
 type mockBiddingService struct {
-	biddingRepo map[int]api.Bidding
 }
 
 var biddingRepo = map[int]api.Bidding{
