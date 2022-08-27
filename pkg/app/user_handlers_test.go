@@ -1,6 +1,7 @@
 package app_test
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -57,13 +58,11 @@ func (mU *mockUserService) Delete(userID int) error {
 }
 
 func (mU *mockUserService) Update(userID int, user api.User) error {
-	/*
-		_, exists := mU.userRepo[userID]
+	_, exists := users[userID]
 
-		if !exists {
-			return &api.ErrNonExistentResource{}
-		}
-	*/
+	if !exists {
+		return &api.ErrNonExistentResource{}
+	}
 
 	return nil
 }
@@ -241,7 +240,6 @@ func TestDeleteUser(t *testing.T) {
 	)
 }
 
-/*
 func TestUpdateUser(t *testing.T) {
 	SetUpRouter()
 	SetUpUserHandlersTest()
@@ -303,4 +301,3 @@ func TestUpdateUser(t *testing.T) {
 		},
 	)
 }
-*/
