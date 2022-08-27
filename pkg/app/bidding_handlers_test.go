@@ -29,13 +29,11 @@ func (mB *mockBiddingService) All() (biddings []api.Bidding, err error) {
 }
 
 func (mB *mockBiddingService) Get(biddingID int) (bidding api.Bidding, err error) {
-	/*
-		bidding, exists := mB.biddingRepo[biddingID]
+	bidding, exists := biddingRepo[biddingID]
 
-		if !exists {
-			return bidding, &api.ErrNonExistentResource{}
-		}
-	*/
+	if !exists {
+		return bidding, &api.ErrNonExistentResource{}
+	}
 
 	return bidding, nil
 }
@@ -119,7 +117,6 @@ func TestAllBiddings(t *testing.T) {
 	assert.Equal(t, expected_response.Data, response.Data)
 }
 
-/*
 func TestGetBidding(t *testing.T) {
 	SetUpRouter()
 	SetUpBiddingHandlersTest()
@@ -150,9 +147,9 @@ func TestGetBidding(t *testing.T) {
 			json.Unmarshal(recorder.Body.Bytes(), &response)
 
 			assert.Equal(t, http.StatusNotFound, recorder.Code)
-			assert.Equal(t, response.Status, expected_response.Status)
-			assert.Equal(t, response.Message, expected_response.Message)
-			assert.Equal(t, response.Data, expected_response.Data)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+			assert.Equal(t, expected_response.Data, response.Data)
 		},
 	)
 
@@ -175,13 +172,14 @@ func TestGetBidding(t *testing.T) {
 			json.Unmarshal(expected_json_response, &expected_response)
 
 			assert.Equal(t, http.StatusFound, recorder.Code)
-			assert.Equal(t, response.Status, expected_response.Status)
-			assert.Equal(t, response.Message, expected_response.Message)
-			assert.Equal(t, response.Data, expected_response.Data)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+			assert.Equal(t, expected_response.Data, response.Data)
 		},
 	)
 }
 
+/*
 func TestUpdateBidding(t *testing.T) {
 	SetUpRouter()
 	SetUpBiddingHandlersTest()
