@@ -60,6 +60,10 @@ func (mB *mockBiddingService) Update(biddingID int, bidding api.Bidding) (err er
 	return nil
 }
 
+func (mB *mockBiddingService) GetBids(biddingID string) (bids []api.Bid, err error) {
+	return bids, err
+}
+
 func SetUpBiddingHandlersTest() {
 	// initialize api variables
 	bidding_service = &mockBiddingService{}
