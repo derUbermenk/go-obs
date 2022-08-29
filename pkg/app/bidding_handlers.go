@@ -210,3 +210,32 @@ func (s *Server) DeleteBidding() gin.HandlerFunc {
 		)
 	}
 }
+
+func (s *Server) AllBids_Bidding() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param(`id`)
+
+		bids, err := s.bidding_service.GetBids(id)
+
+		if err != nil {
+			c.JSON(
+				http.StatusInternalServerError,
+				&GenericResponse{
+					Status:  false,
+					Message: err.Error(),
+				},
+			)
+
+			return
+		}
+
+		c.JSON(
+			http.StatusFound,
+			&GenericResponse{
+				Status:  true,
+				Message: `Bids retrieved`,
+				Data:    bids,
+			},
+		)
+	}
+}
