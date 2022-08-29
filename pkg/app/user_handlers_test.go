@@ -67,6 +67,10 @@ func (mU *mockUserService) Update(userID int, user api.User) error {
 	return nil
 }
 
+func (mU *mockUserService) GetBids(biddingID string) (bids []api.Bid, err error) {
+	return bids, err
+}
+
 // sets up server to use mock user service
 // for all user handler tests
 func SetUpUserHandlersTest() {
