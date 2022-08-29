@@ -290,3 +290,38 @@ func TestUpdateBidding(t *testing.T) {
 		},
 	)
 }
+
+func TestAllBids_Bidding(t *testing.T) {
+	SetUpRouter()
+	SetUpBiddingHandlersTest()
+
+	defer TearDownBiddingHandlersTests()
+	defer TearDownRouter()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/biddings/:id/bids`, server.AllBids_Bidding())
+
+	t.Run(
+		`Gets all bids on Biddings`,
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/biddings/1/bids`, nil)
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: "Bids retrieved",
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+
+			assert.Equal(t, http.StatusFound, recorder.Code)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
+}
