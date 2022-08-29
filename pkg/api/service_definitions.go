@@ -5,6 +5,7 @@ type UserService interface {
 	Get(id int) (user User, err error)
 	Delete(id int) (err error)
 	Update(id int, user User) (err error)
+	GetBids(id string) (bids []Bid, err error)
 }
 
 type user_service struct {
