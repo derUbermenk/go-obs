@@ -21,3 +21,7 @@ func (u *user_service) Delete(id int) (err error) {
 func (u *user_service) Update(id int, user User) (err error) {
 	return
 }
+
+func (u *user_service) GetBids(id string) (bids []Bid, err error) {
+	return
+}
