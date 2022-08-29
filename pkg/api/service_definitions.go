@@ -16,6 +16,7 @@ type BiddingService interface {
 	Get(bID int) (bid Bidding, err error)
 	Delete(bID int) (err error)
 	Update(id int, bidding Bidding) (err error)
+	GetBids(id string) (bids []Bid, err error)
 }
 
 type bidding_service struct {

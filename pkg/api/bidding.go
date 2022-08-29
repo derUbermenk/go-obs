@@ -21,3 +21,7 @@ func (b *bidding_service) Delete(bID int) (err error) {
 func (b *bidding_service) Update(id int, bidding Bidding) (err error) {
 	return
 }
+
+func (b *bidding_service) GetBids(id string) (bids []Bid, err error) {
+	return
+}
