@@ -30,7 +30,7 @@ var auth_service api.AuthService
 // the params when defined after an endpoint without any params.
 // this was solved by either:
 //
-// 1. defining a dummy endpoint at the start
+// 1. defining a dummy endpoint at the start of all tests with a param
 // of all tests (problematic as requires to keep track of test order)
 // or
 // 2. define router setup to be run for every test which led to this function
