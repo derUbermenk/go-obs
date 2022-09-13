@@ -27,27 +27,29 @@ func (s *Server) LogIn() gin.HandlerFunc {
 		// login the user
 		err, accessToken, refreshToken := s.auth_service.LogIn(loginRequest.Email, loginRequest.Password)
 
-		if err.Error() == `Invalid credentials` {
-			c.JSON(
-				http.StatusUnauthorized,
-				&GenericResponse{
-					Status:  false,
-					Message: `Invalid credentials`,
-				},
-			)
+		if err != nil {
+			if err.Error() == `Invalid credentials` {
+				c.JSON(
+					http.StatusUnauthorized,
+					&GenericResponse{
+						Status:  false,
+						Message: `Invalid credentials`,
+					},
+				)
 
-			return
+				return
 
-		} else if err != nil {
-			c.JSON(
-				http.StatusInternalServerError,
-				&GenericResponse{
-					Status:  false,
-					Message: ``,
-				},
-			)
+			} else {
+				c.JSON(
+					http.StatusInternalServerError,
+					&GenericResponse{
+						Status:  false,
+						Message: ``,
+					},
+				)
 
-			return
+				return
+			}
 		}
 
 		c.JSON(
