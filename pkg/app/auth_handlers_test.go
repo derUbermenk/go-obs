@@ -3,6 +3,7 @@ package app_test
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"online-bidding-system/pkg/app"
@@ -11,7 +12,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockAuthService struct{}
+type mockAuthService struct {
+}
+
+func (mAuth *mockAuthService) LogIn(email, password string) (err error, access_token, refresh_token string) {
+	if email == `existingUser@email.com` || password == `correctPassword` {
+		access_token = `ValidAccessToken`
+		refresh_token = `ValidRefreshToken`
+
+		return
+	}
+
+	err = errors.New(`Invalid credentials`)
+
+	return
+}
 
 // initializes server for this test using the
 // auth service we are using here
