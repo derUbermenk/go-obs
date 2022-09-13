@@ -32,6 +32,7 @@ type BidService interface {
 type bid_service struct{}
 
 type AuthService interface {
+	LogIn(email, password string) (err error, access_token, refresh_token string)
 	//	ValidateCredentials(email, password string) (validity bool, err error)
 	//	GenerateAccessToken(email string, expiration int64) (signed_access_token string, err error)
 	//	GenerateRefreshToken(email string, customKey string) (signed_refresh_token string, err error)
