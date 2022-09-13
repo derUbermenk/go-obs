@@ -6,6 +6,10 @@ func NewAuthService(authRepo AuthRepository) AuthService {
 	}
 }
 
+func (a *authentication_service) LogIn(email, password string) (err error, access_token, refresh_token string) {
+	return
+}
+
 func (a *authentication_service) ValidateCredentials(email, password string) (validity bool, err error) {
 	return
 }
