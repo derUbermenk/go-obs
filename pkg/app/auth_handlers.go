@@ -65,3 +65,34 @@ func (s *Server) LogIn() gin.HandlerFunc {
 		)
 	}
 }
+
+func (s *Server) LogOut() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// get header assign it to accessToken variable
+		// do something with accessToken in auth service
+
+		access_token := c.GetHeader(`AccessToken`)
+
+		err := s.auth_service.LogOut(access_token)
+
+		if err != nil {
+			c.JSON(
+				http.StatusBadRequest,
+				&GenericResponse{
+					Status:  false,
+					Message: `Failed`,
+				},
+			)
+
+			return
+		}
+
+		c.JSON(
+			http.StatusOK,
+			&GenericResponse{
+				Status:  true,
+				Message: `Logged out`,
+			},
+		)
+	}
+}
