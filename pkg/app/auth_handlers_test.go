@@ -136,3 +136,61 @@ func TestLogIn(t *testing.T) {
 		},
 	)
 }
+
+func TestLogOut(t *testing.T) {
+	// setup router and server for this test
+	SetUpRouter()
+	SetUpAuthHandlersTest()
+
+	defer TearDownRouter()
+	defer TearDownAuthHandlersTests()
+
+	var response *app.GenericResponse
+	var expected_response *app.GenericResponse
+
+	var request *http.Request
+	var recorder *httptest.ResponseRecorder
+
+	define_route(`GET`, `/authentication/logout`, server.LogOut())
+
+	t.Run(
+		`Logged in / valid access token`,
+		func(t *testing.T) {
+
+			request = initialize_request(`GET`, `/authentication/logout`, nil)
+			request.Header.Set(`AccessToken`, `ValidAccessToken`)
+
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  true,
+				Message: `Logged out`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
+
+	t.Run(
+		`Logged out / invalid access token`,
+		func(t *testing.T) {
+			request = initialize_request(`GET`, `/authentication/logout`, nil)
+			request.Header.Set(`AccessToken`, `InvalidAccessToken`)
+
+			recorder = send_request(request)
+
+			expected_response = &app.GenericResponse{
+				Status:  false,
+				Message: `Failed`,
+			}
+
+			json.Unmarshal(recorder.Body.Bytes(), &response)
+			assert.Equal(t, http.StatusBadRequest, recorder.Code)
+			assert.Equal(t, expected_response.Status, response.Status)
+			assert.Equal(t, expected_response.Message, response.Message)
+		},
+	)
+}
