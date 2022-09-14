@@ -10,6 +10,10 @@ func (a *authentication_service) LogIn(email, password string) (err error, acces
 	return
 }
 
+func (a *authentication_service) LogOut(access_token string) (err error) {
+	return
+}
+
 func (a *authentication_service) ValidateCredentials(email, password string) (validity bool, err error) {
 	return
 }

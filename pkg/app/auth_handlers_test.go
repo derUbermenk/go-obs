@@ -28,6 +28,15 @@ func (mAuth *mockAuthService) LogIn(email, password string) (err error, access_t
 	return
 }
 
+func (mAuth *mockAuthService) LogOut(access_token string) (err error) {
+	if access_token != `ValidAccessToken` {
+		err = errors.New(`Error occured!`) // random error
+		return
+	}
+
+	return
+}
+
 // initializes server for this test using the
 // auth service we are using here
 func SetUpAuthHandlersTest() {
